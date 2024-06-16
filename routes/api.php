@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\SubtaskController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\AttachmentController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,6 @@ Route::apiResource('tasks', TaskController::class);
 Route::apiResource('subtasks', SubtaskController::class);
 Route::apiResource('comments', CommentController::class);
 Route::apiResource('attachments', AttachmentController::class);
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
