@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    background-image: url('../../public/images/fondo2.jpg');
+}
+
 .form-container {
     max-width: 400px;
     margin: 0 auto;
@@ -34,7 +38,7 @@
     font-size: 14px;
 }
 .submit-button {
-    background-color: #44AFF2;
+    background-color: #0D2027;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
