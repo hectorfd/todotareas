@@ -29,6 +29,7 @@ body{
     padding: 10px;
     border: 1px solid #cccccc;
     border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.7); 
 }
 .form-group input[type="checkbox"] {
     margin-right: 10px;
@@ -47,4 +48,8 @@ body{
 }
 .submit-button:hover {
     background-color: #138AF2;
+}
+
+.bg-custom {
+    background-color: rgba(255, 255, 255, 0.7); 
 }

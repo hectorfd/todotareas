@@ -16,11 +16,11 @@
 </head>
 <body>
     <div class="min-h-screen flex items-center justify-center">
-    <div class="centered-container">
+    <div class="centered-container ">
     
     
             
-    <form method="POST" action="{{ route('login') }}" class="form-container">
+    <form method="POST" action="{{ route('login') }}" class="form-container bg-custom">
         @csrf
         <div class="flex items-center justify-center">
         <h2 class="mx-auto mb-4 text-green-400 font-bold">Login</h2>

@@ -16,6 +16,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-800">
@@ -32,7 +33,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="max-w-[1200px] mx-auto p-4 bg-white rounded-lg shadow-lg">
+            <div class="max-w-[1200px] mx-auto p-4 bg-white bg-custom rounded-lg shadow-lg">
                 @yield('content')
             </div>
         </main>
