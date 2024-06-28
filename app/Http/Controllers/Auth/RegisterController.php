@@ -23,25 +23,34 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
             'username' => 'required|string|max:30|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'nombre' => 'nullable|string|max:60',
+            'apellido' => 'nullable|string|max:60',
+            'telefono' => 'nullable|integer',
+            'direccion' => 'required|string|max:100',
+            'email' => 'required|string|email|max:60|unique:users',
+            'password' => 'required|string|min:6|max:30|confirmed',
         ]);
-
+    
         if ($validator->fails()) {
-            throw ValidationException::withMessages($validator->errors()->toArray());
+            return back()->withErrors($validator)->withInput();
         }
-
+    
+        // Crear el usuario
         $user = User::create([
-            'name' => $request->name,
             'username' => $request->username,
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
+    
+        // Autenticar al usuario después del registro
         auth()->login($user);
-
-        return redirect()->intended('dashboard');
-    }
+    
+        // Redirigir al usuario a la página de inicio de sesión
+        return redirect()->route('login');
+ }
 }
