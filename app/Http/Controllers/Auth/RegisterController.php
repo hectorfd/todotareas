@@ -27,7 +27,7 @@ class RegisterController extends Controller
             'nombre' => 'nullable|string|max:60',
             'apellido' => 'nullable|string|max:60',
             'telefono' => 'nullable|integer',
-            'direccion' => 'required|string|max:100',
+            'direccion' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:60|unique:users',
             'password' => 'required|string|min:6|max:30|confirmed',
         ]);

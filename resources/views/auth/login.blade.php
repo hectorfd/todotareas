@@ -9,16 +9,11 @@
     <title>Login</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
-        
-        
-    </style>
+    
 </head>
 <body>
     <div class="min-h-screen flex items-center justify-center">
     <div class="centered-container ">
-    
-    
             
     <form method="POST" action="{{ route('login') }}" class="form-container bg-custom">
         @csrf
@@ -55,6 +50,19 @@
     </form>
     </div>
 </div>
+<script>
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        const usernameInput = document.getElementById('username');
+        
+        usernameInput.addEventListener('input', function() {
+            this.value = this.value.toLowerCase().replace(/\s/g, '');
+        });
+        
+
+        
+    });
+</script>
 </body>
 </html>
 
