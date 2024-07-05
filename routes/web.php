@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\TaskListController;
+use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
@@ -56,3 +57,7 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'
 Route::get('/task-lists/create', [TaskListController::class, 'create'])->name('task_lists.create');
 Route::post('/task-lists', [TaskListController::class, 'store'])->name('task_lists.store');
 
+Route::get('/task_lists/{taskList}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+Route::post('/task_lists/{taskList}/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+Route::get('/task_lists/{taskList}/completed', [TaskController::class, 'completed'])->name('tasks.completed');

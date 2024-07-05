@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
-
+use App\Models\TaskList;
+use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
     /**
@@ -19,10 +20,33 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function create($taskListId)
     {
-        $task = Task::create($request->all());
-        return response()->json($task, 201);
+        $taskList = TaskList::findOrFail($taskListId);
+        return view('tasks.create', compact('taskList'));
+    }
+
+    public function store(Request $request, $taskListId)
+    {
+        $request->validate([
+            'titulo' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
+            'fecha_vencimiento' => 'nullable|date',
+            'completada' => 'boolean',
+        ]);
+
+        $taskList = TaskList::findOrFail($taskListId);
+
+        $task = new Task();
+        $task->titulo = $request->titulo;
+        $task->descripcion = $request->descripcion;
+        $task->fecha_vencimiento = $request->fecha_vencimiento;
+        $task->completada = $request->completada ?? false;
+        $task->user_id = Auth::id();
+        $task->task_list_id = $taskList->id;
+        $task->save();
+
+        return redirect()->route('dashboard')->with('success', 'Tarea creada con éxito.');
     }
 
     /**
@@ -51,4 +75,21 @@ class TaskController extends Controller
         Task::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
+    public function updateStatus(Request $request, $id)
+    {
+    $task = Task::findOrFail($id);
+    $task->completada = $request->completada;
+    $task->save();
+
+    return response()->json(['success' => true]);
+    }
+    public function completed($taskListId)
+{
+    $taskList = TaskList::findOrFail($taskListId);
+    $completedTasks = $taskList->tasks()->where('completada', true)->get();
+
+    return view('tasks.completed', compact('taskList', 'completedTasks'));
+}
+
+
 }
