@@ -37,7 +37,7 @@
                                         </div>
                                         
                                         <ul class="list-group mt-3">
-                                            @foreach($taskList->tasks as $task)
+                                            @foreach($taskList->tasks->where('completada', 0) as $task)
                                                 <li class="list-group-item {{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'task-vencida' : '' }}">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div>
@@ -52,7 +52,8 @@
                                                             <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                <input type="checkbox" name="completada" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                <input type="hidden" name="completada" value="0">
+                                                                <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
                                                                 <span class="badge badge-{{ $task->completada ? 'success' : 'secondary' }}">
                                                                     {{ $task->completada ? 'Completada' : 'Pendiente' }}
                                                                 </span>
@@ -73,6 +74,7 @@
         </div>
     </div>
 @endsection
+
 
 
 

@@ -76,20 +76,22 @@ class TaskController extends Controller
         return response()->json(null, 204);
     }
     public function updateStatus(Request $request, $id)
-    {
+{
     $task = Task::findOrFail($id);
-    $task->completada = $request->completada;
+    $task->completada = $request->has('completada') ? 1 : 0;
     $task->save();
 
-    return response()->json(['success' => true]);
-    }
+    return redirect()->route('dashboard');
+}
+
+
     public function completed($taskListId)
-{
+    {
     $taskList = TaskList::findOrFail($taskListId);
-    $completedTasks = $taskList->tasks()->where('completada', true)->get();
+    $completedTasks = $taskList->tasks()->where('completada', 1)->get();
 
     return view('tasks.completed', compact('taskList', 'completedTasks'));
-}
+    }
 
 
 }
