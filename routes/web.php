@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TaskListController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
@@ -17,9 +18,7 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -41,6 +40,10 @@ Route::get('/', function () {
 
 // require __DIR__.'/auth.php';
 
+Route::get('/', function () {
+    return view('auth/login');
+});
+
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
@@ -49,3 +52,7 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register'])->name('registro');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+Route::get('/task-lists/create', [TaskListController::class, 'create'])->name('task_lists.create');
+Route::post('/task-lists', [TaskListController::class, 'store'])->name('task_lists.store');
+

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('task_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('listName',100);
+            $table->string('listName', 100);
             $table->text('descripcion')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
+            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('cascade');
             $table->timestamps();
         });
     }
