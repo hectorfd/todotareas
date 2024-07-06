@@ -52,17 +52,40 @@ class TaskListController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function edit($id)
     {
-        //
+    $taskList = TaskList::findOrFail($id);
+    return view('task_lists.edit', compact('taskList'));
     }
+
+    public function update(Request $request, $id)
+    {
+    $taskList = TaskList::findOrFail($id);
+
+    $request->validate([
+        'listName' => 'required|string|max:100',
+        'descripcion' => 'nullable|string',
+    ]);
+
+    $taskList->update([
+        'listName' => $request->listName,
+        'descripcion' => $request->descripcion,
+    ]);
+
+    return redirect()->route('dashboard')->with('success', 'Lista actualizada exitosamente');
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $taskList = TaskList::findOrFail($id);
+        $taskList->delete();
+    
+        return redirect()->route('dashboard')->with('success', 'Lista eliminada exitosamente');
     }
+    
     
 }
