@@ -52,9 +52,13 @@
                                                             <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
                                                                 @csrf
                                                                 @method('PATCH')
+                                                                {{-- span con texto --}}
+                                                                <span class="ml-2 p-4 text-sm text-gray-400">completar</span>
+                                                                
                                                                 <input type="hidden" name="completada" value="0">
-                                                                <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
-                                                                <span class="badge badge-{{ $task->completada ? 'success' : 'secondary' }}">
+                                                                <input type="checkbox" name="completada" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
+
+                                                                <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">
                                                                     {{ $task->completada ? 'Completada' : 'Pendiente' }}
                                                                 </span>
                                                             </form>
