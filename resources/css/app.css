@@ -59,3 +59,14 @@ body{
 .hidden {
     display: none;
 }
+
+.btn-primary {
+    background-color: #0D2340;
+    border-color: #003C4C; 
+}
+.btn-primary:hover{
+    
+    background-color: #165873;  
+    border-color: #003C4C; 
+
+}

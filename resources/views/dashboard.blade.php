@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div>
-                <span class="mr-3">Usuario: {{ Auth::user()->username }}</span>
+                <span class="mr-3 font-bold">Usuario: {{ Auth::user()->username }}</span>
                 <a href="{{ route('profile.edit') }}" class="btn btn-primary">
                     <i class="fas fa-edit mr-2"></i>Perfil
                 </a>
@@ -22,7 +22,7 @@
             @if($taskLists->count() > 0)
                 <div class="card mt-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h2 class="mb-0">Tus Listas</h2>
+                        <h2 class="mb-0 font-bold">Tus Listas</h2>
                         <div class="justify-content-center">
                             <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                         </div>
@@ -36,11 +36,14 @@
                                         <button class="btn btn-link toggle-tasks" data-target="tasks-{{ $taskList->id }}">
                                             <i class="fas fa-tasks mr-2"></i>
                                         </button>
-                                        <h4>{{ $taskList->listName }}</h4>
+                                        <h4 class="font-bold">{{ $taskList->listName }}</h4>
                                         <div class="d-flex align-items-center">
                                             <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
-                                            <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm"><i class="fas fa-check-square mr-0 text-white"></i></a>
-                                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}"><i class="fas fa-pencil-alt mr-0 text-white"></i></button>
+                                            
+                                            <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success ml-2 btn-sm"><i class="fas fa-check-square mr-0 text-white"></i></a>
+                                            
+                                            <button class="btn btn-info ml-2 btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}"><i class="fas fa-pencil-alt mr-0 text-white"></i></button>
+                                            
                                             <form method="POST" action="{{ route('task_lists.destroy', $taskList->id) }}" class="inline-block ml-2 delete-form">
                                                 @csrf
                                                 @method('DELETE')
