@@ -73,69 +73,77 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                                
                                                 @if ($task->subtasks && $task->subtasks->count() > 0)
-                                                    <ul class="list-group mt-3">
-                                                        @foreach($task->subtasks as $subtask)
-                                                            <li class="list-group-item">
-                                                                <div class="d-flex justify-content-between align-items-center">
-                                                                    <div>
-                                                                        <strong>{{ $subtask->titulo }}</strong>
-                                                                        <form method="POST" action="{{ route('subtasks.updateStatus', $subtask->id) }}">
-                                                                            @csrf
-                                                                            @method('PATCH')
-                                                                            <input type="checkbox" name="completado" value="1" class="form-check-input cursor-pointer p-2 w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
-                                                                            <span class="m-2 badge badge-{{ $subtask->completado ? 'success' : 'secondary' }}">{{ $subtask->completado ? 'Completada' : 'Pendiente' }}</span>
-                                                                        </form>
-                                                                    </div>
-                                                                    <form method="POST" action="{{ route('subtasks.destroy', $subtask->id) }}" class="ml-2 delete-form">
+                                                <ul class="list-group mt-3">
+                                                    @foreach($task->subtasks as $subtask)
+                                                        <li class="list-group-item">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div>
+                                                                    <strong>{{ $subtask->titulo }}</strong>
+                                                                    <form method="POST" action="{{ route('subtasks.updateStatus', $subtask->id) }}">
                                                                         @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-times mr-0 text-white"></i></button>
+                                                                        @method('PATCH')
+                                                                        <input type="checkbox" name="completado" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                        <span class="m-2 badge badge-{{ $subtask->completado ? 'success' : 'secondary' }}">{{ $subtask->completado ? 'Completada' : 'Pendiente' }}</span>
                                                                     </form>
                                                                 </div>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                                <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">Crear subtarea</button>
-                                                <!-- Modal Crear Subtarea -->
-                                                <div class="modal fade" id="createSubtaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="createSubtaskModalLabel-{{ $task->id }}" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="createSubtaskModalLabel-{{ $task->id }}">Crear Subtarea</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                                <form method="POST" action="{{ route('subtasks.destroy', $subtask->id) }}" class="ml-2 delete-form">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-times mr-0 text-white"></i></button>
+                                                                </form>
                                                             </div>
-                                                            <form method="POST" action="{{ route('subtasks.store', $task->id) }}">
-                                                                @csrf
-                                                                <div class="modal-body">
-                                                                    <div class="form-group">
-                                                                        <label for="titulo">Título</label>
-                                                                        <input type="text" class="form-control" id="titulo" name="titulo" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                                    <button type="submit" class="btn btn-primary">Crear</button>
-                                                                </div>
-                                                            </form>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+
+                                            
+                                            <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">Crear subtarea</button>
+                                            
+                                            
+                                            <div class="modal fade" id="createSubtaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="createSubtaskModalLabel-{{ $task->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="createSubtaskModalLabel-{{ $task->id }}">Crear Subtarea</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
+                                                        <form method="POST" action="{{ route('subtasks.store', $task->id) }}">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="titulo">Título</label>
+                                                                    <input type="text" name="titulo" class="form-control" required>
+                                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                                            </div>
+                                            
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 </div>
+</div>
+
+
 
 
     @foreach($taskLists as $taskList)
