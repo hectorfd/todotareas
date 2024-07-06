@@ -64,3 +64,7 @@ Route::get('/task_lists/{taskList}/completed', [TaskController::class, 'complete
 
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+

@@ -60,29 +60,39 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    // public function update(Request $request, string $id)
+    // {
+    //     $task = Task::findOrFail($id);
+    //     $task->update($request->all());
+    //     return response()->json($task, 200);
+    // }
+    public function update(Request $request, Task $task)
     {
-        $task = Task::findOrFail($id);
-        $task->update($request->all());
-        return response()->json($task, 200);
+    $task->update($request->all());
+    return redirect()->back()->with('success', 'Tarea actualizada correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    // public function destroy(string $id)
+    // {
+    //     Task::findOrFail($id)->delete();
+    //     return response()->json(null, 204);
+    // }
+    public function destroy(Task $task)
     {
-        Task::findOrFail($id)->delete();
-        return response()->json(null, 204);
+    $task->delete();
+    return redirect()->back()->with('success', 'Tarea eliminada correctamente.');
     }
     public function updateStatus(Request $request, $id)
-{
+    {
     $task = Task::findOrFail($id);
     $task->completada = $request->has('completada') ? 1 : 0;
     $task->save();
 
     return redirect()->route('dashboard');
-}
+    }
 
 
     public function completed($taskListId)

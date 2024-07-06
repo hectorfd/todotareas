@@ -25,8 +25,7 @@
                             <h2 class="mb-0">Tus Listas</h2>
                             <div class="justify-content-center">
                                 <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
-                                {{-- TODO: crear pagina para editar listas --}}
-                                <a href="#" class="btn btn-primary" >Editar Listas</a>
+                                <a href="#" class="btn btn-primary">Editar Listas</a>
                             </div>
                         </div>
                         
@@ -40,11 +39,7 @@
                                                 <button class="btn btn-link toggle-tasks " data-target="tasks-{{ $taskList->id }}">
                                                     <i class="fas fa-tasks mr-2"></i>
                                                   </button>
-                                                  
-                                                  
-                                                
                                                 <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
-                                                
                                                 <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm">Completados</a>
                                             </div>
                                         </div>
@@ -61,21 +56,24 @@
                                                                 {{ $task->fecha_vencimiento }}
                                                             </small>
                                                         </div>
-                                                        <div>
+                                                        <div class="d-flex align-items-center">
                                                             <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
                                                                 @csrf
                                                                 @method('PATCH')
-
                                                                 <input type="hidden" name="completada" value="0">
                                                                 <input type="checkbox" name="completada" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
-
-                                                                <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">
-                                                                    {{ $task->completada ? 'Completada' : 'Pendiente' }}
-                                                                </span>
+                                                                <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
+                                                            </form>
+                                                            <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">Editar</button>
+                                                            <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </li>
+                                                @include('tasks.edit', ['task' => $task])
                                             @endforeach
                                         </ul>
                                     </li>
@@ -88,10 +86,10 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const toggleButtons = document.querySelectorAll('.toggle-tasks');
-            
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
@@ -99,8 +97,7 @@
                     targetList.classList.toggle('hidden'); 
                 });
             });
-    
-            
+
             const toggleAllListsButton = document.getElementById('toggleAllLists');
             toggleAllListsButton.addEventListener('click', function() {
                 const allTaskLists = document.querySelectorAll('.list-group');
@@ -112,6 +109,7 @@
     </script>
     
 @endsection
+
 
 
 
