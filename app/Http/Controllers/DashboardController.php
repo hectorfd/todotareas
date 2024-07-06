@@ -14,4 +14,14 @@ class DashboardController extends Controller
         return view('dashboard', compact('taskLists'));
         // return view('dashboard');
     }
+    // public function index()
+    // {
+    // $taskLists = TaskList::where('user_id', Auth::id())
+    //     ->with(['tasks' => function($query) {
+    //         $query->where('completada', 0)->paginate(5);
+    //     }])->get();
+
+    // return view('dashboard', compact('taskLists'));
+    // }
+
 }

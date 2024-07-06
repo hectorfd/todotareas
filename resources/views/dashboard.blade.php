@@ -4,7 +4,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>TodoList</h1>
+                <div>
+                    <span class="mr-3">Usuario: {{ Auth::user()->username }}</span>
+                    <a href="{{ route('profile.edit') }}" class="btn btn-primary">
+                        Editar Perfil
+                    </a>
+                </div>
                 
                 @if($taskLists->count() == 0)
                     <div class="card mt-4">
@@ -20,7 +25,8 @@
                             <h2 class="mb-0">Tus Listas</h2>
                             <div class="justify-content-center">
                                 <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
-                                <a href="" class="btn btn-primary">Editar lista</a>
+                                {{-- TODO: crear pagina para editar listas --}}
+                                <a href="#" class="btn btn-primary" >Editar Listas</a>
                             </div>
                         </div>
                         
@@ -29,14 +35,21 @@
                                 @foreach($taskLists as $taskList)
                                     <li class="list-group-item">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            {{ $taskList->listName }}
                                             <div>
+                                                <h4>{{ $taskList->listName }}</h4>
+                                                <button class="btn btn-link toggle-tasks " data-target="tasks-{{ $taskList->id }}">
+                                                    <i class="fas fa-tasks mr-2"></i>
+                                                  </button>
+                                                  
+                                                  
+                                                
                                                 <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
-                                                <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-secondary btn-sm">Completados</a>
+                                                
+                                                <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm">Completados</a>
                                             </div>
                                         </div>
                                         
-                                        <ul class="list-group mt-3">
+                                        <ul class="list-group mt-3 tasks-{{ $taskList->id }}">
                                             @foreach($taskList->tasks->where('completada', 0) as $task)
                                                 <li class="list-group-item {{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'task-vencida' : '' }}">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -52,9 +65,7 @@
                                                             <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                {{-- span con texto --}}
-                                                                <span class="ml-2 p-4 text-sm text-gray-400">completar</span>
-                                                                
+
                                                                 <input type="hidden" name="completada" value="0">
                                                                 <input type="checkbox" name="completada" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
 
@@ -77,7 +88,37 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleButtons = document.querySelectorAll('.toggle-tasks');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetList = document.querySelector(`.${targetId}`);
+                    targetList.classList.toggle('hidden'); 
+                });
+            });
+    
+            
+            const toggleAllListsButton = document.getElementById('toggleAllLists');
+            toggleAllListsButton.addEventListener('click', function() {
+                const allTaskLists = document.querySelectorAll('.list-group');
+                allTaskLists.forEach(list => {
+                    list.classList.toggle('hidden'); 
+                });
+            });
+        });
+    </script>
+    
 @endsection
+
+
+
+
+
+
+
 
 
 

@@ -56,3 +56,6 @@ body{
 .task-vencida {
     color: red;
 }
+.hidden {
+    display: none;
+}
