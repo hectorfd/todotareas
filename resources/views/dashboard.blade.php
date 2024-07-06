@@ -40,7 +40,7 @@
                                                     <i class="fas fa-tasks mr-2"></i>
                                                   </button>
                                                 <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
-                                                <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm">Completados</a>
+                                                <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm"><i class="fas fa-check-square mr-0 text-white"></i></a>
                                             </div>
                                         </div>
                                         
@@ -64,12 +64,18 @@
                                                                 <input type="checkbox" name="completada" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
                                                                 <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                             </form>
-                                                            <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">Editar</button>
-                                                            <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2">
+                                                            <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}"><i class="far fa-edit mr-0 text-white"></i></button>
+                                                            {{-- <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times mr-0 text-white"></i></button>
+                                                            </form> --}}
+                                                            <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2 delete-form">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-times mr-0 text-white"></i></button>
                                                             </form>
+                                                            
                                                         </div>
                                                     </div>
                                                 </li>
@@ -106,6 +112,30 @@
                 });
             });
         });
+        document.addEventListener("DOMContentLoaded", function() {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const form = this.closest('.delete-form');
+                
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
     </script>
     
 @endsection
