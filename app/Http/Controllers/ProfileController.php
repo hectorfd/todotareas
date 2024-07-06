@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
+use Illuminate\Support\Facades\Hash;
+
 class ProfileController extends Controller
 {
     /**
@@ -24,17 +26,45 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+    //     $request->user()->save();
+
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:30|unique:users,username,' . Auth::id(),
+            'nombre' => 'nullable|string|max:60',
+            'apellido' => 'nullable|string|max:60',
+            'telefono' => 'nullable|integer',
+            'direccion' => 'nullable|string|max:100',
+            'email' => 'required|string|email|max:60|unique:users,email,' . Auth::id(),
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+        $user->username = $request->username;
+        $user->nombre = $request->nombre;
+        $user->apellido = $request->apellido;
+        $user->telefono = $request->telefono;
+        $user->direccion = $request->direccion;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.edit')->with('success', 'Perfil actualizado exitosamente.');
     }
 
     /**

@@ -7,7 +7,7 @@
                 <div>
                     <span class="mr-3">Usuario: {{ Auth::user()->username }}</span>
                     <a href="{{ route('profile.edit') }}" class="btn btn-primary">
-                        Editar Perfil
+                        <i class="fas fa-edit mr-2"></i>Perfil
                     </a>
                 </div>
                 

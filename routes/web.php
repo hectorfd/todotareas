@@ -61,3 +61,6 @@ Route::get('/task_lists/{taskList}/tasks/create', [TaskController::class, 'creat
 Route::post('/task_lists/{taskList}/tasks', [TaskController::class, 'store'])->name('tasks.store');
 Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
 Route::get('/task_lists/{taskList}/completed', [TaskController::class, 'completed'])->name('tasks.completed');
+
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

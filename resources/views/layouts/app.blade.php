@@ -37,7 +37,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="max-w-[1200px] mx-auto p-4 bg-white bg-custom rounded-lg shadow-lg">
+            <div class="max-w-[800px] mx-auto p-4 bg-white bg-custom rounded-lg shadow-lg">
                 @yield('content')
             </div>
         </main>
