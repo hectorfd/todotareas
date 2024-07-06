@@ -11,6 +11,8 @@ class DashboardController extends Controller
     public function index()
     {
         $taskLists = TaskList::where('user_id', Auth::id())->get();
+        // $taskLists = TaskList::with(['tasks.subtasks'])->where('user_id', Auth::id())->get();
+
         return view('dashboard', compact('taskLists'));
         // return view('dashboard');
     }
@@ -23,5 +25,6 @@ class DashboardController extends Controller
 
     // return view('dashboard', compact('taskLists'));
     // }
+    
 
 }

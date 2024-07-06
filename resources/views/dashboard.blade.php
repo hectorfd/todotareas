@@ -38,7 +38,7 @@
                                                 <h4>{{ $taskList->listName }}</h4>
                                                 <button class="btn btn-link toggle-tasks " data-target="tasks-{{ $taskList->id }}">
                                                     <i class="fas fa-tasks mr-2"></i>
-                                                  </button>
+                                                </button>
                                                 <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
                                                 <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success btn-sm"><i class="fas fa-check-square mr-0 text-white"></i></a>
                                             </div>
@@ -65,21 +65,72 @@
                                                                 <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                             </form>
                                                             <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}"><i class="far fa-edit mr-0 text-white"></i></button>
-                                                            {{-- <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-times mr-0 text-white"></i></button>
-                                                            </form> --}}
                                                             <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2 delete-form">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-times mr-0 text-white"></i></button>
                                                             </form>
-                                                            
                                                         </div>
                                                     </div>
+                                                    
+                                                    <!-- Subtareas -->
+                                                    @if ($task->subtasks && $task->subtasks->count() > 0)
+                                                        <ul class="list-group mt-3">
+                                                            @foreach($task->subtasks as $subtask)
+                                                                <li class="list-group-item">
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <strong>{{ $subtask->titulo }}</strong>
+                                                                            <form method="POST" action="{{ route('subtasks.updateStatus', $subtask->id) }}">
+                                                                                @csrf
+                                                                                @method('PATCH')
+                                                                                <input type="checkbox" name="completado" value="1" class="form-check-input cursor-pointer p-2  w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-green-500 checked:border-green-500 focus:ring-0 focus:outline-none" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                                <span class="m-2 badge badge-{{ $subtask->completado ? 'success' : 'secondary' }}">{{ $subtask->completado ? 'Completada' : 'Pendiente' }}</span>
+                                                                            </form>
+                                                                        </div>
+                                                                        <form method="POST" action="{{ route('subtasks.destroy', $subtask->id) }}" class="ml-2 delete-form">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-times mr-0 text-white"></i></button>
+                                                                        </form>
+                                                                    </div>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+
+                                                    <!-- Botón para crear subtareas -->
+                                                    <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">Crear subtarea</button>
+                                                    
+                                                    <!-- Modal para crear subtareas -->
+                                                    <div class="modal fade" id="createSubtaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="createSubtaskModalLabel-{{ $task->id }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="createSubtaskModalLabel-{{ $task->id }}">Crear Subtarea</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form method="POST" action="{{ route('subtasks.store', $task->id) }}">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label for="titulo">Título</label>
+                                                                            <input type="text" name="titulo" class="form-control" required>
+                                                                            <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
                                                 </li>
-                                                @include('tasks.edit', ['task' => $task])
                                             @endforeach
                                         </ul>
                                     </li>
@@ -88,11 +139,16 @@
                         </div>
                     </div>
                 @endif
-                
             </div>
         </div>
     </div>
 
+    <!-- Incluir modal de edición de tarea -->
+    @foreach($taskLists as $taskList)
+        @foreach($taskList->tasks as $task)
+            @include('tasks.edit-modal', ['task' => $task])
+        @endforeach
+    @endforeach
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const toggleButtons = document.querySelectorAll('.toggle-tasks');
@@ -121,7 +177,7 @@
                 
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: "¡No podrás revertir esto!",
+                    text: "¡Deseas Eliminar la Tarea!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -137,8 +193,11 @@
         });
     });
     </script>
-    
+
 @endsection
+
+
+
 
 
 

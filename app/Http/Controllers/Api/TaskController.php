@@ -103,5 +103,12 @@ class TaskController extends Controller
     return view('tasks.completed', compact('taskList', 'completedTasks'));
     }
 
+    public function edit(Task $task)
+    {
+    return view('tasks.edit', compact('task'));
+    }
+
+
+
 
 }

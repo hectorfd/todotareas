@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\TaskListController;
+use App\Http\Controllers\Api\SubtaskController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -67,4 +68,9 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 
 Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
 Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
 
+
+Route::post('/tasks/{task}/subtasks', [SubtaskController::class, 'store'])->name('subtasks.store');
+Route::patch('/subtasks/{subtask}/update-status', [SubtaskController::class, 'updateStatus'])->name('subtasks.updateStatus');
+Route::delete('/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->name('subtasks.destroy');

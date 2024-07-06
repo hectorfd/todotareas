@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Subtask;
 
 class SubtaskController extends Controller
 {
@@ -20,7 +21,18 @@ class SubtaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'titulo' => 'required|string|max:100',
+            'task_id' => 'required|exists:tasks,id'
+        ]);
+
+        Subtask::create([
+            'titulo' => $request->titulo,
+            'task_id' => $request->task_id,
+            'completado' => false,
+        ]);
+
+        return back();
     }
 
     /**
@@ -34,16 +46,21 @@ class SubtaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function updateStatus(Subtask $subtask)
     {
-        //
+        $subtask->completado = !$subtask->completado;
+        $subtask->save();
+
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Subtask $subtask)
     {
-        //
+        $subtask->delete();
+
+        return back();
     }
 }
