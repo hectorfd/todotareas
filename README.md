@@ -23,3 +23,4 @@ Los siguientes requerimientos se tomaron en cuenta para el desarrollo de la apli
 | **7** | Las tareas pueden contener comentarios como forma de comunicación entre los usuarios que participan colaborativamente en una lista                                                                                               |
 ## Diseño ER de la Base de Datos
 
+![Modelo lógico](public/md/TodoList1.jpg)
