@@ -1,3 +1,7 @@
 # Practica 1
-por: Héctor Ferro Dávalos
+<center>por: Héctor Ferro Dávalos</center>
+
 # Aplicación ToDoList o lista de Tareas
+
+## Análisis y Diseño
+
