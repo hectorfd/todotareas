@@ -73,7 +73,7 @@ class TaskListController extends Controller
     ]);
 
     return redirect()->route('dashboard')->with('success', 'Lista actualizada exitosamente');
-}
+    }
 
 
     /**

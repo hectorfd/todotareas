@@ -159,4 +159,188 @@ crearemos nuestro primer commit en visual code y configuraremos los pasos necesa
 
 aquí mostramos una vista de tiempo de commits
 
-![Modelo lógico](public/md/git.jpg)
+![Vista Git](public/md/git.jpg)
+
+### Modelo Vista Controlador 
+ejemplo en nuestro Código implementado Lista de Tareas
+#### Modelo-Migración
+podemos observar que la llave foránea de grupo tiene valor nulo, esta puede ser relacionada mas tarde con algún grupo de trabajo que se cree mas adelante
+```php
+Schema::create('task_lists', function (Blueprint $table) {
+            $table->id();
+            $table->string('listName', 100);
+            $table->text('descripcion')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('group_id')->nullable()->constrained('groups')->onDelete('cascade');
+            $table->timestamps();
+        });
+```
+#### Modelo-Model
+tenemos que hacer referencia a la tabla de tareas y usuarios con la cual tiene relación, también definimos los valores que serán añadidos a la base de datos, ['Listname', 'descripcion','user_id'], group_id es una funcionalidad que sera realizada en el futuro como sabemos solo avanzaremos hasta el nivel 4 por lo cual aun no usaremos esta funcionalidad 
+```php
+protected $fillable = ['listName', 'descripcion', 'user_id'];
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+```
+### Controlador
+este es el controlador de lista de tareas en donde tenemos los metodos para nuestro CRUD tenemos: 
+1. create(), para llamar al archivo create.blade.php de la carpeta task_lists en donde se encuentra el formulario de la vista.
+2. store(), validara la información ingresada en el formulario de la vista si la accion finaliza con éxito redireccionara al dashboard
+3. edit(), traerá los datos del modelo al formulario del archivo edit
+4. update(), validara y actualizara cualquier cambio realizado en el formulario
+5. destroy(), eliminara la actual lista que selecionaste para eliminar 
+
+```php
+public function create()
+    {
+        return view('task_lists.create');
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'listName' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
+        ]);
+        TaskList::create([
+            'listName' => $request->listName,
+            'descripcion' => $request->descripcion,
+            'user_id' => Auth::id(),
+        ]);
+        return redirect()->route('dashboard')->with('success', 'Lista creada exitosamente');
+    }
+    public function edit($id)
+    {
+    $taskList = TaskList::findOrFail($id);
+    return view('task_lists.edit', compact('taskList'));
+    }
+    public function update(Request $request, $id)
+    {
+    $taskList = TaskList::findOrFail($id);
+    $request->validate([
+        'listName' => 'required|string|max:100',
+        'descripcion' => 'nullable|string',
+    ]);
+    $taskList->update([
+        'listName' => $request->listName,
+        'descripcion' => $request->descripcion,
+    ]);
+    return redirect()->route('dashboard')->with('success', 'Lista actualizada exitosamente');
+}
+ public function destroy($id)
+    {
+        $taskList = TaskList::findOrFail($id);
+        $taskList->delete();
+        return redirect()->route('dashboard')->with('success', 'Lista eliminada exitosamente');
+    }
+```
+### Vista 
+#### Vista - Create
+esta es la vista que el usuario podrá interactuar para crear una lista, consiste en un formulario básico y estilos combinados con tailwind, boobstrap y css convensional.
+
+```php
+@extends('layouts.app')
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header">Crear Lista</div>
+                    <div class="card-body">
+                        <form action="{{ route('task_lists.store') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="listName">Nombre de la Lista</label>
+                                <input type="text" name="listName" id="listName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="descripcion">Descripción</label>
+                                <textarea name="descripcion" id="descripcion" class="form-control"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+```
+#### Vista - edit
+esta es la vista para editar y actualizar las listas, falta aplicar modularidad para organizar mejor el codigo 
+```php
+@foreach($taskLists as $taskList)
+    <div class="modal fade" id="editTaskListModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskListModalLabel-{{ $taskList->id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTaskListModalLabel-{{ $taskList->id }}">Editar Lista</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('task_lists.update', $taskList->id) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="listName">Nombre de la Lista</label>
+                            <input type="text" class="form-control" id="listName" name="listName" value="{{ $taskList->listName }}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endforeach
+```
+#### Vista-dashboard
+En esta vista aplicamos una condicional el usuario vera por primera ves un campo para crear su primera lista una ves que una lista se haya creado mostrara la lista creada ocultado los demás elementos
+```php
+ @if($taskLists->count() == 0)
+                <div class="card mt-4">
+                    <div class="card-header"> <h2>Crear tu primera lista</h2></div>
+                    <div class="card-body">
+                        <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
+                    </div>
+                </div>
+            @endif
+            @if($taskLists->count() > 0)
+                <div class="card mt-4">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-purple-600">
+                        <h2 class="mb-0 font-bold text-white">Tus Listas</h2>
+                        <div class="justify-content-center">
+                            <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
+                        </div>
+                    </div>
+```
+
+Esta parte del Código dentro de dashboard lista todas las listas creadas acompañadas de botones para el CRUD de la lista y un botón para Crear Tareas 
+```php
+
+@foreach($taskLists as $taskList)
+<li class="list-group-item">
+<div class="d-flex justify-content-between align-items-center">
+<button class="btn btn-link toggle-tasks" data-target="tasks-{{ $taskList->id }}">
+<i class="fas fa-tasks mr-2"></i>
+</button>
+<h4 class="font-bold">{{ $taskList->listName }}</h4>
+<div class="d-flex align-items-center">
+<a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
+<a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success ml-2 btn-sm"><i class="fas fa-check-square mr-0 text-white"></i></a>
+<button class="btn btn-info ml-2 btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}"><i class="fas fa-pencil-alt mr-0 text-white"></i></button>
+<form method="POST" action="{{ route('task_lists.destroy', $taskList->id) }}" class="inline-block ml-2 delete-form">
+  @csrf
+  @method('DELETE')
+<button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fas fa-trash-alt mr-0 text-white"></i></button>
+                                          
+```
