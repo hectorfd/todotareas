@@ -21,8 +21,8 @@
             @endif
             @if($taskLists->count() > 0)
                 <div class="card mt-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h2 class="mb-0 font-bold">Tus Listas</h2>
+                    <div class="card-header d-flex justify-content-between align-items-center bg-purple-600">
+                        <h2 class="mb-0 font-bold text-white">Tus Listas</h2>
                         <div class="justify-content-center">
                             <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                         </div>
