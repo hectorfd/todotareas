@@ -4,7 +4,13 @@
 <div class="container">
     <div class="row">
         <!-- Slider Dinámico -->
-        <div class="col-md-3">
+        <div class="col-md-4">
+            <div class="card-header d-flex justify-content-between align-items-center bg-purple-600">
+                <h2 class="mb-0 font-bold text-white">Tus Listas</h2>
+                <div class="justify-content-center">
+                    <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
+                </div>
+            </div>
             <div class="list-group" id="list-taskLists">
                 @foreach($taskLists as $taskList)
                     <a href="javascript:void(0)" class="list-group-item list-group-item-action" onclick="showTasks({{ $taskList->id }})">
@@ -15,7 +21,7 @@
         </div>
 
         <!-- Contenido de las Tareas -->
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="d-flex align-items-center justify-content-between mb-3"> 
                 <div class="d-flex align-items-center"> 
                     <div class="mr-3">
@@ -49,12 +55,7 @@
 
             @if($taskLists->count() > 0)
                 <div class="card mt-4">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-purple-600">
-                        <h2 class="mb-0 font-bold text-white">Tus Listas</h2>
-                        <div class="justify-content-center">
-                            <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
-                        </div>
-                    </div>
+                    
 
                     <div class="card-body">
                         @foreach($taskLists as $taskList)
@@ -278,13 +279,24 @@
                 el.style.display = 'none';
             });
     
-            document.getElementById('task-list-' + listId).style.display = 'block';
+            if (listId) {
+                var selectedList = document.getElementById('task-list-' + listId);
+                if (selectedList) {
+                    selectedList.style.display = 'block';
+                }
+            }
         }
     
+        
         if (document.querySelectorAll('.tasks-container').length > 0) {
-            showTasks({{ $taskLists->first()->id }});
+            showTasks({{ $taskLists->first()->id ?? 'null' }});
+        } else {
+            
+            window.location.href = "{{ route('task_lists.create') }}";
         }
     </script>
+    
+    
 
 @endsection
 
