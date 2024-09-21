@@ -12,7 +12,7 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-DWQmf9-2.css') }}">">
     <script src="{{ asset('build/assets/app.[hash].js') }}" defer></script> --}}
-    
+    <link rel="stylesheet" href="{{ asset('build/assets/app-DWQmf9-2.css') }}">
     @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
@@ -123,7 +123,7 @@
     </script>
 
     <!-- Bootstrap JS -->
-    {{-- <script src="{{ asset('build/assets/app-Bg1aHGgo.js') }}" defer></script> --}}
+    <script src="{{ asset('build/assets/app-Bg1aHGgo.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
