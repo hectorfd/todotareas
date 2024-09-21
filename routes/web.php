@@ -74,3 +74,6 @@ Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.e
 Route::post('/tasks/{task}/subtasks', [SubtaskController::class, 'store'])->name('subtasks.store');
 Route::patch('/subtasks/{subtask}/update-status', [SubtaskController::class, 'updateStatus'])->name('subtasks.updateStatus');
 Route::delete('/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->name('subtasks.destroy');
+
+Route::get('/task-lists/{taskList}/tasks', [TaskListController::class, 'getTasks'])->name('task-lists.tasks');
+

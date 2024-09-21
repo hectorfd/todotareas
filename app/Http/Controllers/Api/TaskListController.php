@@ -86,6 +86,16 @@ class TaskListController extends Controller
     
         return redirect()->route('dashboard')->with('success', 'Lista eliminada exitosamente');
     }
+
+
+    public function getTasks(TaskList $taskList)
+    {
+        // Retorna las tareas de la lista como JSON
+        return response()->json([
+            'tasks' => $taskList->tasks
+        ]);
+    }
+
     
     
 }
