@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -60,8 +61,13 @@ class ProfileController extends Controller
         $user->email = $request->email;
 
         if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
-            $path = $request->foto->store('public/fotos');  
-            $user->foto = $path;  
+            
+            if ($user->foto) {
+                Storage::delete($user->foto);
+            }
+            
+            $path = $request->foto->store('public/fotos');
+            $user->foto = $path;
         }
 
         if ($request->filled('password')) {
