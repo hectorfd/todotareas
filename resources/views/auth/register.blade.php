@@ -9,6 +9,9 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-DWQmf9-2.css') }}">">
+    <script src="{{ asset('build/assets/app.[hash].js') }}" defer></script> --}}
     
     @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
 </head>
@@ -16,7 +19,7 @@
     <div class="min-h-screen flex items-center justify-center">
         <div class="max-w-5xl mx-auto p-6 bg-white bg-opacity-50 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Crear Cuenta</h2>
-            <form method="POST" action="{{ route('registro') }}">
+            <form method="POST" action="{{ route('registro') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -70,6 +73,14 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div>
+                        <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto de Perfil</label>
+                        <input id="foto" type="file" name="foto" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        @error('foto')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -112,6 +123,7 @@
     </script>
 
     <!-- Bootstrap JS -->
+    {{-- <script src="{{ asset('build/assets/app-Bg1aHGgo.js') }}" defer></script> --}}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

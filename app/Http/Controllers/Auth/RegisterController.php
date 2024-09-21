@@ -30,6 +30,7 @@ class RegisterController extends Controller
             'direccion' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:60|unique:users',
             'password' => 'required|string|min:6|max:30|confirmed',
+            'foto' => 'nullable|image|max:2048',
         ]);
     
         if ($validator->fails()) {
@@ -46,6 +47,12 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        // antes de guardar la foto verificar si es valido y guardar
+        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+            $path = $request->foto->store('public/fotos'); 
+            $user->foto = $path; 
+            $user->save(); 
+        }
     
         // Autenticar al usuario después del registro
         auth()->login($user);

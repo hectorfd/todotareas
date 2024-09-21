@@ -48,6 +48,7 @@ class ProfileController extends Controller
             'direccion' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:60|unique:users,email,' . Auth::id(),
             'password' => 'nullable|string|min:8|confirmed',
+            'foto' => 'nullable|image|max:2048', 
         ]);
 
         $user = Auth::user();
@@ -57,6 +58,11 @@ class ProfileController extends Controller
         $user->telefono = $request->telefono;
         $user->direccion = $request->direccion;
         $user->email = $request->email;
+
+        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+            $path = $request->foto->store('public/fotos');  
+            $user->foto = $path;  
+        }
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
