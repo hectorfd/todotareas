@@ -37,7 +37,7 @@
                 {{ session('success') }}
             </div>
         @endif
-        <form action="{{ route('profile.update') }}" method="POST">
+        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="username">Username</label>
@@ -63,6 +63,14 @@
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
             </div>
+            <div class="form-group">
+                <label for="foto">Foto de Perfil</label>
+                <input type="file" class="form-control" id="foto" name="foto">
+                @if($user->foto)
+                    <img src="{{ Storage::url($user->foto) }}" alt="Foto de Perfil" style="width: 100px; height: auto;">
+                @endif
+            </div>
+            
             <div class="form-group">
                 <label for="password">Contraseña (dejar en blanco para mantener la actual)</label>
                 <input type="password" class="form-control" id="password" name="password">
