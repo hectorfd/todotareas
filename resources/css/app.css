@@ -1,9 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body{
     background-image: url('../../public/images/fondo2.jpg');
+    font-family: 'Playfair Display', sans-serif;
 }
 
 .form-container {
@@ -51,7 +60,7 @@ body{
 }
 
 .bg-custom {
-    background-color: rgba(255, 255, 255, 0.7); 
+    background-color: #F4F8FB; 
 }
 .task-vencida {
     color: red;
@@ -70,3 +79,102 @@ body{
     border-color: #003C4C; 
 
 }
+.list-group-item {
+    /* border: none; */
+    border-top: 4px solid #F6F7F7;
+    border-bottom: 4px solid #F6F7F7;
+    transition: border-color 0.3s ease-in-out; 
+}
+.list-group-item2 {
+    border: none;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 4px;
+    border-top: 1px solid #ccc;
+   
+     
+}
+
+.list-group-item:hover {
+    border-top-color: #9333EA; 
+    border-bottom-color: #9333EA;
+}
+
+@keyframes animateBorder {
+    from {
+        border-color: transparent;
+    }
+    to {
+        border-color: #007bff; 
+    }
+}
+
+/* Estilos base para el panel de listas */
+.panel-listas {
+    background-color: #343a40; 
+    color: #ffffff;
+    border-radius: 4px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); */
+    
+}
+
+.panel-listas .card-header {
+    background-color: #0D2340; /* Cabezera más oscura */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.panel-listas .list-group-item {
+    /* background-color: #343a40; */
+    border-top: 1px solid #ccc;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Alinear los elementos a los extremos correctamente */
+    transition: background-color 0.3s;
+    border-top: 1px solid #ccc;
+}
+
+.panel-listas .list-group-item:hover {
+    background-color: #DCEEF2;/* Sutil cambio de color al hacer hover para mejor visibilidad */
+    
+}
+
+.panel-listas .icon-check {
+    color: #9498F2; /* Verde brillante para el icono, mejorando visibilidad */
+    margin-right: 10px;
+    
+}
+
+.panel-listas .task-count {
+    background-color: #17A2B8; /* Cambio a un azul para el contador para mayor visibilidad */
+    color: #ffffff; 
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto; /* Asegurar que el contador se alinee a la derecha */
+    font-weight: bold; /* Hacer el texto del contador más destacado */
+    
+}
+
+.panel-listas .btn-primary {
+    background-color: #F29F05; /* Azul brillante para el botón */
+    border-color: #F29F05;
+}
+.panel-listas .btn-primary:hover {
+    background-color: #FFC107; /* Azul brillante para el botón */
+    border-color: #F29F05;
+}
+
+

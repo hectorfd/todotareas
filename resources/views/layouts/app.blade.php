@@ -11,20 +11,36 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+
+
+
+
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-            <!-- FontAwesome CSS -->
+    <!-- FontAwesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
+    <style>
+        /* Aplicar Playfair Display al cuerpo del documento */
+        body {
+             font-family: 'Open Sans', sans-serif;
+             background-color: #F4F8FB;
+        }
+        .color{
+            color: #F4F8FB;
+        }
+
+    </style>
 </head>
-<body class="font-sans antialiased">
+<body class="">
     <div class="min-h-screen bg-gray-800">
         @include('layouts.navigation')
 
@@ -39,7 +55,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="max-w-[1000px] mx-auto p-4 bg-white bg-custom rounded-lg shadow-lg">
+            <div class="max-w-[1000px] mx-auto p-4 bg-black bg-custom rounded-lg shadow-lg">
                 @yield('content')
             </div>
         </main>
