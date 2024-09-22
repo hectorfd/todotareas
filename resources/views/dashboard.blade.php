@@ -5,23 +5,23 @@
     <div class="row">
         <!-- Slider Dinámico -->
         <div class="col-md-4">
-            <div class="card panel-listas">
+            <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
                     <h2 class="mb-0 font-bold ">Tus Listas</h2>
                     <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                 </div>
                 <div class="list-group">
                     @foreach($taskLists as $taskList)
-                    <div class="list-group-item flex justify-between items-center px-3 py-2  cursor-pointer" onclick="showTasks({{ $taskList->id }})">
-                        <i class="fas fa-check icon-check text-green-500"></i>
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
+                        <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
                         <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
-                        <span class="badge panel-listas  rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
                     </div>
-                    
                     @endforeach
                 </div>
             </div>
         </div>
+        
         
         
 
@@ -36,14 +36,18 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Agrega aquí íconos para seleccionar -->
                         <i class="fas fa-check" onclick="setIcon('fa-check')"></i>
                         <i class="fas fa-star" onclick="setIcon('fa-star')"></i>
-                        <!-- Más íconos según necesites -->
+                        <i class="fas fa-heart" onclick="setIcon('fa-heart')"></i>
+                        <i class="fas fa-bell" onclick="setIcon('fa-bell')"></i>
+                        <i class="fas fa-flag" onclick="setIcon('fa-flag')"></i>
+                        <i class="fas fa-envelope" onclick="setIcon('fa-envelope')"></i>
+                        
                     </div>
                 </div>
             </div>
         </div>
+
 
 
         <!-- Contenido de las Tareas -->
@@ -327,11 +331,17 @@
     </script>
     
     <script>
-        function setIcon(icon) {
-            // Ejemplo de cómo podrías cambiar el ícono
-            document.querySelector('.icon-check').className = 'fas ' + icon + ' icon-check';
-            $('#iconModal').modal('hide');
+        function openIconModal() {
+            $('#iconModal').modal('show'); // Usa jQuery para mostrar el modal
         }
+
+        function setIcon(icon) {
+            document.querySelectorAll('.icon-check').forEach((iconElement) => {
+                iconElement.className = 'fas ' + icon + ' icon-check'; // Cambia la clase de todos los íconos
+            });
+            $('#iconModal').modal('hide'); // Oculta el modal
+        }
+
     </script>
 
 @endsection

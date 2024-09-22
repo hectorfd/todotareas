@@ -121,7 +121,7 @@ body{
 }
 
 .panel-listas .card-header {
-    background-color: #0D2340; /* Cabezera más oscura */
+    background-color: #0D2340; 
     color: white;
     padding: 10px 20px;
     display: flex;
@@ -138,24 +138,24 @@ body{
     padding: 10px 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Alinear los elementos a los extremos correctamente */
+    justify-content: space-between; 
     transition: background-color 0.3s;
     border-top: 1px solid #ccc;
 }
 
 .panel-listas .list-group-item:hover {
-    background-color: #DCEEF2;/* Sutil cambio de color al hacer hover para mejor visibilidad */
+    background-color: #DCEEF2;
     
 }
 
 .panel-listas .icon-check {
-    color: #9498F2; /* Verde brillante para el icono, mejorando visibilidad */
+    color: #9498F2; 
     margin-right: 10px;
     
 }
 
 .panel-listas .task-count {
-    background-color: #17A2B8; /* Cambio a un azul para el contador para mayor visibilidad */
+    background-color: #17A2B8; 
     color: #ffffff; 
     border-radius: 50%;
     width: 24px;
@@ -163,18 +163,27 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: auto; /* Asegurar que el contador se alinee a la derecha */
-    font-weight: bold; /* Hacer el texto del contador más destacado */
+    margin-left: auto; 
+    font-weight: bold; 
     
 }
 
 .panel-listas .btn-primary {
-    background-color: #F29F05; /* Azul brillante para el botón */
+    background-color: #F29F05; 
     border-color: #F29F05;
 }
 .panel-listas .btn-primary:hover {
-    background-color: #FFC107; /* Azul brillante para el botón */
+    background-color: #FFC107; 
     border-color: #F29F05;
 }
 
+
+.panel-listas-fixed {
+    position: fixed; 
+    top: 80px; 
+    width: 300px; 
+    max-height: calc(100vh - 40px); 
+    overflow-y: auto; 
+    z-index: 10; 
+}
 
