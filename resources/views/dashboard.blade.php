@@ -5,20 +5,50 @@
     <div class="row">
         <!-- Slider Dinámico -->
         <div class="col-md-4">
-            <div class="card-header d-flex justify-content-between align-items-center bg-purple-600">
-                <h2 class="mb-0 font-bold text-white">Tus Listas</h2>
-                <div class="justify-content-center">
+            <div class="card panel-listas panel-listas-fixed">
+                <div class="card-header">
+                    <h2 class="mb-0 font-bold ">Tus Listas</h2>
                     <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                 </div>
-            </div>
-            <div class="list-group" id="list-taskLists">
-                @foreach($taskLists as $taskList)
-                    <a href="javascript:void(0)" class="list-group-item list-group-item-action" onclick="showTasks({{ $taskList->id }})">
-                        {{ $taskList->listName }}
-                    </a>
-                @endforeach
+                <div class="list-group">
+                    @foreach($taskLists as $taskList)
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
+                        <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                        <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
+                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </div>
+        
+        
+        
+
+        <!-- Modal para seleccionar íconos -->
+        <div class="modal fade" id="iconModal" tabindex="-1" role="dialog" aria-labelledby="iconModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="iconModalLabel">Seleccionar Icono</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <i class="fas fa-check" onclick="setIcon('fa-check')"></i>
+                        <i class="fas fa-star" onclick="setIcon('fa-star')"></i>
+                        <i class="fas fa-heart" onclick="setIcon('fa-heart')"></i>
+                        <i class="fas fa-bell" onclick="setIcon('fa-bell')"></i>
+                        <i class="fas fa-flag" onclick="setIcon('fa-flag')"></i>
+                        <i class="fas fa-envelope" onclick="setIcon('fa-envelope')"></i>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- Contenido de las Tareas -->
         <div class="col-md-8">
@@ -61,7 +91,7 @@
                         @foreach($taskLists as $taskList)
                             <!-- Contenedor de las tareas de cada lista, inicialmente oculto -->
                             <ul class="list-group tasks-container" id="task-list-{{ $taskList->id }}" style="display: none;">
-                                <li class="list-group-item">
+                                <li class="">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <button class="btn btn-link toggle-tasks" data-target="tasks-{{ $taskList->id }}">
                                             <i class="fas fa-tasks mr-2"></i>
@@ -93,9 +123,9 @@
                                             <li class="list-group-item {{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'task-vencida' : '' }}">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <strong>{{ $task->titulo }}</strong>
-                                                        <p>{{ $task->descripcion }}</p>
-                                                        <small>{{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'Vencido' : 'Vence' }}: {{ $task->fecha_vencimiento }}</small>
+                                                        <strong >{{ $task->titulo }}</strong>
+                                                        <p class="text-sm text-indigo-700">{{ $task->descripcion }}</p>
+                                                        <small class="text-gray-400">{{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'Vencido' : 'Vence' }}: {{ $task->fecha_vencimiento }}</small>
                                                     </div>
                                                     <div class="d-flex align-items-center">
                                                         <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
@@ -103,7 +133,7 @@
                                                             @method('PATCH')
                                                             <input type="hidden" name="completada" value="0">
                                                             <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
-                                                            <span class="m-2 badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
+                                                            <span class=" badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                         </form>
                                                         <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
                                                             <i class="far fa-edit mr-0 text-white"></i>
@@ -111,8 +141,8 @@
                                                         <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2 delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                                                <i class="fas fa-times mr-0 text-white"></i>
+                                                            <button type="button" class="btn btn-sm btn-danger  delete-btn">
+                                                                <i class="fas fa-times mr-0 text-indigo hover:text-white " ></i>
                                                             </button>
                                                         </form>
                                                     </div>
@@ -121,22 +151,23 @@
                                                 @if ($task->subtasks && $task->subtasks->count() > 0)
                                                     <ul class="list-group mt-3">
                                                         @foreach($task->subtasks as $subtask)
-                                                            <li class="list-group-item">
+                                                            <li class="list-group-item2 ">
                                                                 <div class="d-flex justify-content-between align-items-center">
                                                                     <div>
-                                                                        <strong>{{ $subtask->titulo }}</strong>
+                                                                        <strong class="text-sm text-gray-500">{{ $subtask->titulo }}</strong>
                                                                         <form method="POST" action="{{ route('subtasks.updateStatus', $subtask->id) }}">
                                                                             @csrf
                                                                             @method('PATCH')
-                                                                            <input type="checkbox" name="completado" value="1" class="form-check-input" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                            <input type="checkbox" name="completado" value="1" class="form-check-input ml-1" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                            <span>&#160;&#160;&#160;&#160;&#160;</span>
                                                                             <span class="badge badge-{{ $subtask->completado ? 'success' : 'secondary' }}">{{ $subtask->completado ? 'Completada' : 'Pendiente' }}</span>
                                                                         </form>
                                                                     </div>
                                                                     <form method="POST" action="{{ route('subtasks.destroy', $subtask->id) }}" class="ml-2 delete-form">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                                                            <i class="fas fa-times mr-0 text-white"></i>
+                                                                        <button type="button" class="btn btn-sm delete-btn">
+                                                                            <i class="fas fa-times mr-0 text-indigo" style="color: rgba(117, 133, 144, 0.5);"></i>
                                                                         </button>
                                                                     </form>
                                                                 </div>
@@ -159,6 +190,7 @@
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
+                                                            
                                                             <form method="POST" action="{{ route('subtasks.store', $task->id) }}">
                                                                 @csrf
                                                                 <div class="modal-body">
@@ -177,10 +209,12 @@
                                                     </div>
                                                 </div>
                                             </li>
+                                            <p><br></p>
                                         @endforeach
                                     </ul>
                                 </li>
                             </ul>
+                            
                         @endforeach
                     </div>
                 </div>
@@ -296,7 +330,19 @@
         }
     </script>
     
-    
+    <script>
+        function openIconModal() {
+            $('#iconModal').modal('show'); // Usa jQuery para mostrar el modal
+        }
+
+        function setIcon(icon) {
+            document.querySelectorAll('.icon-check').forEach((iconElement) => {
+                iconElement.className = 'fas ' + icon + ' icon-check'; // Cambia la clase de todos los íconos
+            });
+            $('#iconModal').modal('hide'); // Oculta el modal
+        }
+
+    </script>
 
 @endsection
 
