@@ -40,20 +40,6 @@
         }
 
 
-        .min-h-screen {
-            position: relative;
-            z-index: 1; 
-        }
-        .blur-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 8) 0%, rgba(0, 0, 0, 0.5) 100%);
-            backdrop-filter: blur(80px); 
-            z-index: -1; 
-        }
 
 
     </style>
