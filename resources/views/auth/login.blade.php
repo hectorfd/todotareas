@@ -45,6 +45,8 @@
         </div>
         <div class="flex items-center justify-center">
         <button type="submit" class="mr-4 submit-button">Iniciar sesión</button>
+        
+        <a href="/google-auth/redirect" class="submit-button">Gooogle</a>
         <a href="{{ route('register') }}" class=" submit-button hover:bg-green-400">Registrarse</a>
         </div>
     </form>
