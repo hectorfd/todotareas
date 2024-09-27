@@ -55,13 +55,25 @@
             <div class="d-flex align-items-center justify-content-between mb-3"> 
                 <div class="d-flex align-items-center"> 
                     <div class="mr-3">
-                        @if(Auth::user()->foto)
+                        {{-- @if(Auth::user()->foto)
                             <img src="{{ Storage::url(Auth::user()->foto) }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
                         @else
                             <div style="width: 50px; height: 50px; border-radius: 50%; background: gray; display: flex; align-items: center; justify-content: center; color: white;">
                                 Sin foto
                             </div>
+                        @endif --}}
+                        @if(Auth::user()->foto)
+                            @if(filter_var(Auth::user()->foto, FILTER_VALIDATE_URL))
+                                <img src="{{ Auth::user()->foto }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
+                            @else
+                                <img src="{{ Storage::url(Auth::user()->foto) }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
+                            @endif
+                        @else
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: gray; display: flex; align-items: center; justify-content: center; color: white;">
+                                Sin foto
+                            </div>
                         @endif
+
                     </div>
                     <div>
                         <span class="font-bold">{{ Auth::user()->username }}</span>
