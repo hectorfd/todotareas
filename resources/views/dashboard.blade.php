@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+    
     <div class="row">
         <!-- Slider Dinámico -->
         <div class="col-md-4">

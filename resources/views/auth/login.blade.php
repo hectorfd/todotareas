@@ -26,14 +26,26 @@
             width: 100%;
             height: 100%;
             object-fit: cover; 
-            z-index: -1;
+            z-index: -100;
             transform: translate(-50%, -50%);
             background-size: cover;
+            filter: blur(0px); 
         }
+
 
         .min-h-screen {
             position: relative;
             z-index: 1; 
+        }
+        .blur-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
+            backdrop-filter: blur(50px); 
+            z-index: -1; 
         }
 
 
@@ -43,8 +55,10 @@
 <body>
     <div class="video-container">
         <video autoplay muted loop id="background-video">
-            <source src="{{ asset('images/fondo.mp4') }}" type="video/mp4">
+            
+            <source src="{{ asset('images/fondo5.mp4') }}" type="video/mp4">
             Tu navegador no soporta la etiqueta de video.
+            <div class="blur-overlay"></div> 
         </video>
     </div>
     <div class="min-h-screen flex items-center justify-center">
@@ -53,7 +67,7 @@
     <form method="POST" action="{{ route('login') }}" class="form-container bg-custom">
         @csrf
         <div class="flex items-center justify-center">
-        <h2 class="mx-auto mb-4 text-green-400 font-bold">Login</h2>
+        <h2 class="mx-auto mb-4 text-red-500 font-bold">Login</h2>
         </div>
         <img src="{{ asset('images/mochi.gif') }}" alt="Login" class="mx-auto mb-4 w-32  object-cover">
         <div class="form-group">
@@ -84,7 +98,7 @@
         {{-- <a href="/google-auth/redirect" class="submit-button">Gooogle</a> --}}
         
         
-        <a href="{{ route('register') }}" class=" submit-button hover:bg-green-400">Registrarse</a>
+        <a href="{{ route('register') }}" class=" submit-button hover:bg-red-500">Registrarse</a>
         </div>
         <div class="center-container">
             <a href="/google-auth/redirect" class="google-btn">
