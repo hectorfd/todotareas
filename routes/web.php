@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +50,49 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', function () {
     return view('auth/login');
 });
+
+Route::get('/google-auth/redirect', function () {
+    return Socialite::driver('google')->redirect();
+});
+ 
+Route::get('/google-auth/callback', function () {
+    $user_google = Socialite::driver('google')->user();
+    $user = User::updateOrCreate(
+                ['email' => $user_google->getEmail()],
+                [
+                    'username' => $user_google->getName(),
+                    'email' => $user_google->getEmail(),
+                    'foto' => $user_google->getAvatar(),
+                    'password' => Hash::make(uniqid()), 
+                ]
+            );
+    Auth::login($user);
+    return redirect('/dashboard');
+    // $user->token
+});
+
+// Route::get('google-auth/redirect', function () {
+//     return Socialite::driver('google')->redirect();
+// });
+// // ->name('google.login');
+
+// Route::get('google-auth/callback', function () {
+//     $googleUser = Socialite::driver('google')->user();
+
+//     // Buscar o crear un usuario
+//     $user = User::updateOrCreate(
+//         ['email' => $googleUser->getEmail()],
+//         [
+//             'username' => $googleUser->getName(),
+//             'email' => $googleUser->getEmail(),
+//             'foto' => $googleUser->getAvatar(),
+//             'password' => Hash::make(uniqid()), // Contraseña temporal
+//         ]
+//     );
+
+//     Auth::login($user);
+//     return redirect('/dashboard');
+// });
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
