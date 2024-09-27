@@ -8,10 +8,45 @@
 
     <title>Login</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; 
+        }
 
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+        }
+
+        .min-h-screen {
+            position: relative;
+            z-index: 1; 
+        }
+
+
+    </style>
     
 </head>
 <body>
+    <div class="video-container">
+        <video autoplay muted loop id="background-video">
+            <source src="{{ asset('images/fondo.mp4') }}" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+    </div>
     <div class="min-h-screen flex items-center justify-center">
     <div class="centered-container ">
             
@@ -46,9 +81,18 @@
         <div class="flex items-center justify-center">
         <button type="submit" class="mr-4 submit-button">Iniciar sesión</button>
         
-        <a href="/google-auth/redirect" class="submit-button">Gooogle</a>
+        {{-- <a href="/google-auth/redirect" class="submit-button">Gooogle</a> --}}
+        
+        
         <a href="{{ route('register') }}" class=" submit-button hover:bg-green-400">Registrarse</a>
         </div>
+        <div class="center-container">
+            <a href="/google-auth/redirect" class="google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google logo" class="google-icon">
+                <span>Iniciar con Google</span>
+            </a>
+        </div>
+        
     </form>
     </div>
 </div>

@@ -41,6 +41,7 @@
     </style>
 </head>
 <body class="">
+    
     <div class="min-h-screen bg-gray-800">
         @include('layouts.navigation')
 

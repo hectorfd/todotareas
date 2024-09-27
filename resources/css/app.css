@@ -11,7 +11,7 @@
 @tailwind utilities;
 
 body{
-    background-image: url('../../public/images/fondo2.jpg');
+    /* background-image: url('../../public/images/fondo2.jpg'); */
     font-family: 'Playfair Display', sans-serif;
 }
 
@@ -58,10 +58,15 @@ body{
 .submit-button:hover {
     background-color: #138AF2;
 }
-
+/* 
 .bg-custom {
     background-color: #F4F8FB; 
+} */
+.bg-custom {
+    /* background-color: rgba(244, 248, 251, 0.9);  */
+    background-image: url('../../public/images/fondo1.jpg');
 }
+
 .task-vencida {
     color: red;
 }
@@ -187,3 +192,38 @@ body{
     z-index: 10; 
 }
 
+/* para google */
+
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.google-btn:hover {
+    background-color: #357AE8;
+}
+
+.google-btn:active {
+    background-color: #3367D6;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.center-container {
+    text-align: center;
+    margin-top: 20px; 
+}
