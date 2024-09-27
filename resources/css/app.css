@@ -12,7 +12,7 @@
 
 body{
     /* background-image: url('../../public/images/fondo2.jpg'); */
-    font-family: 'Playfair Display', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .form-container {
@@ -63,8 +63,8 @@ body{
     background-color: #F4F8FB; 
 } */
 .bg-custom {
-    /* background-color: rgba(244, 248, 251, 0.9);  */
-    background-image: url('../../public/images/fondo1.jpg');
+    background-color: rgba(244, 248, 251, 0.9); 
+    /* background-image: url('../../public/images/fondo1.jpg'); */
 }
 
 .task-vencida {

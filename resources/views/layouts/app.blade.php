@@ -37,12 +37,59 @@
         .color{
             color: #F4F8FB;
         }
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1; 
+        }
+
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            z-index: -100;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+            filter: blur(0px); 
+        }
+
+
+        .min-h-screen {
+            position: relative;
+            z-index: 1; 
+        }
+        .blur-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
+            backdrop-filter: blur(50px); 
+            z-index: -1; 
+        }
+
 
     </style>
 </head>
 <body class="">
     
-    <div class="min-h-screen bg-gray-800">
+    <div class="min-h-screen">
+        <div class="video-container">
+            <video autoplay muted loop id="background-video">
+                
+                <source src="{{ asset('images/fondo5.mp4') }}" type="video/mp4">
+                Tu navegador no soporta la etiqueta de video.
+                <div class="blur-overlay"></div> 
+            </video>
+        </div>
         @include('layouts.navigation')
 
         <!-- Page Heading -->
