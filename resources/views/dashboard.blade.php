@@ -111,6 +111,9 @@
                                         </button>
                                         <h4 class="font-bold">{{ $taskList->listName }}</h4>
                                         <div class="d-flex align-items-center">
+                                            
+                                            
+
                                             <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
 
                                             <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success ml-2 btn-sm">
@@ -121,14 +124,104 @@
                                                 <i class="fas fa-pencil-alt mr-0 text-white"></i>
                                             </button>
 
-                                            <form method="POST" action="{{ route('task_lists.destroy', $taskList->id) }}" class="inline-block ml-2 delete-form">
+                                            <!-- Botón para crear un nuevo grupo -->
+                                            <button class="btn btn-indigo btn-sm ml-0" data-toggle="modal" data-target="#createGroupModal-{{ $taskList->id }}">
+                                                <i class="fas fa-briefcase fa-2x" style="color: #9367EB;"></i>
+                                            </button>
+                                            
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="createGroupModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel-{{ $taskList->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="createGroupModalLabel-{{ $taskList->id }}">Crear Nuevo Grupo</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        <form action="{{ route('groups.store') }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="groupname">Nombre del Grupo</label>
+                                                                    <input type="text" class="form-control" id="groupname" name="groupname" required>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="descripcion">Descripción</label>
+                                                                    <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Crear Grupo</button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button class="btn  btn-sm ml-0" data-toggle="modal" data-target="#assignGroupModal-{{ $taskList->id }}">
+                                                <i class="fas fa-plus-square fa-2x" style="color: #72F0B7;"></i>
+                                            </button>
+
+                                            <!-- Modal para asignar lista de tareas a un grupo -->
+                                            <div class="modal fade" id="assignGroupModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="assignGroupModalLabel-{{ $taskList->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="assignGroupModalLabel-{{ $taskList->id }}">Asignar Lista a un Grupo</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+
+                                                        <form method="POST" action="{{ route('task_lists.assignGroup', $taskList->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="group_id">Selecciona un grupo</label>
+                                                                    <select name="group_id" id="group_id" class="form-control" required>
+                                                                        <option value="" disabled selected>Elige un grupo</option>
+                                                                        @foreach($groups as $group)
+                                                                            <option value="{{ $group->id }}">{{ $group->groupname }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Agregar esta lista al grupo</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+                                            
+
+                                            <form method="POST" action="{{ route('task_lists.destroy', $taskList->id) }}" class="inline-block ml-1 delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-danger btn-sm delete-btn">
                                                     <i class="fas fa-trash-alt mr-0 text-white"></i>
                                                 </button>
                                             </form>
+
+                                            
                                         </div>
+                                            
                                     </div>
 
                                     <ul class="list-group mt-3 tasks-{{ $taskList->id }}">
@@ -189,6 +282,8 @@
                                                     </ul>
                                                 @endif
 
+                                                
+
                                                 <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">
                                                     Crear subtarea
                                                 </button>
@@ -221,6 +316,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </li>
                                             <p><br></p>
                                         @endforeach
@@ -229,14 +325,14 @@
                             </ul>
                             
                         @endforeach
+
+                        
                     </div>
                 </div>
             @endif
         </div>
     </div>
 </div>
-
-
 
 
     @foreach($taskLists as $taskList)

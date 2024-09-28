@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Group;
 class GroupController extends Controller
 {
     /**
@@ -12,7 +12,14 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        // $groups = Group::all();
+        return back();
+        // return view('group.index', compact('groups'));
+    }
+
+    public function create()
+    {
+        return view('group.create');  
     }
 
     /**
@@ -20,7 +27,17 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'groupname' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $validatedData['user_id'] = auth()->id(); 
+
+        Group::create($validatedData);
+
+        return redirect()->route('groups.index')->with('success', 'Grupo creado exitosamente');
+    
     }
 
     /**
@@ -28,7 +45,8 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $group = Group::findOrFail($id);
+        return view('group.show', compact('group'));
     }
 
     /**
@@ -36,7 +54,17 @@ class GroupController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $group = Group::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'groupname' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $group->update($validatedData);
+
+        return redirect()->route('groups.index')->with('success', 'Grupo actualizado exitosamente');
+   
     }
 
     /**
@@ -44,6 +72,10 @@ class GroupController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $group = Group::findOrFail($id);
+        $group->delete();
+
+        return redirect()->route('groups.index')->with('success', 'Grupo eliminado exitosamente');
+   
     }
 }
