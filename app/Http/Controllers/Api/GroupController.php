@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\Invitation;
 class GroupController extends Controller
 {
     /**
@@ -78,4 +79,24 @@ class GroupController extends Controller
         return redirect()->route('groups.index')->with('success', 'Grupo eliminado exitosamente');
    
     }
+
+
+    public function inviteUser(Request $request, Group $group)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|in:admin,write,read',
+        ]);
+
+        // Crear invitación
+        Invitation::create([
+            'group_id' => $group->id,
+            'invited_user_id' => $request->user_id,
+            'inviter_user_id' => auth()->id(),
+            'role' => $request->role,
+        ]);
+
+        return back()->with('success', 'Invitación enviada.');
+    }
+
 }

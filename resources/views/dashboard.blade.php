@@ -5,7 +5,7 @@
     
     <div class="row">
         <!-- Slider Dinámico -->
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
                     <h2 class="mb-0 font-bold ">Tus Listas</h2>
@@ -21,7 +21,43 @@
                     @endforeach
                 </div>
             </div>
+        </div> --}}
+        <div class="col-md-4">
+            <div class="card panel-listas panel-listas-fixed">
+                <div class="card-header">
+                    <h2 class="mb-0 font-bold ">Tus Listas</h2>
+                    <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
+                </div>
+                <div class="list-group">
+                    <!-- Listas propias -->
+                    @foreach($taskLists as $taskList)
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
+                        <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                        <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
+                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                    </div>
+                    @endforeach
+        
+                    <!-- Listas compartidas -->
+                    {{-- @foreach($sharedTaskLists as $sharedTaskList)
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $sharedTaskList->id }})" style="background-color: #E0F7FA;"> <!-- Cambia el color para listas compartidas -->
+                        <i class="fas fa-share icon-check text-blue-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                        <small class="text-sm flex-grow text-blue-800 ml-2">{{ $sharedTaskList->listName }} (Compartida)</small>
+                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($sharedTaskList->tasks) }}</span>
+                    </div>
+                    @endforeach --}}
+                    <!-- Mostrar las listas compartidas con el usuario -->
+                    @foreach($sharedTaskLists as $taskList)
+                        <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-indigo-100" onclick="showTasks({{ $taskList->id }})">
+                            <i class="fas fa-share-alt icon-check text-blue-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                            <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }} (Compartida)</small>
+                            <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
+        
         
         
         
@@ -56,13 +92,6 @@
             <div class="d-flex align-items-center justify-content-between mb-3"> 
                 <div class="d-flex align-items-center"> 
                     <div class="mr-3">
-                        {{-- @if(Auth::user()->foto)
-                            <img src="{{ Storage::url(Auth::user()->foto) }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
-                        @else
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: gray; display: flex; align-items: center; justify-content: center; color: white;">
-                                Sin foto
-                            </div>
-                        @endif --}}
                         @if(Auth::user()->foto)
                             @if(filter_var(Auth::user()->foto, FILTER_VALIDATE_URL))
                                 <img src="{{ Auth::user()->foto }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
@@ -97,10 +126,8 @@
             @endif
 
             @if($taskLists->count() > 0)
-                <div class="card mt-4">
+                <div class="card-body">
                     
-
-                    <div class="card-body">
                         @foreach($taskLists as $taskList)
                             <!-- Contenedor de las tareas de cada lista, inicialmente oculto -->
                             <ul class="list-group tasks-container" id="task-list-{{ $taskList->id }}" style="display: none;">
@@ -191,6 +218,7 @@
                                                                             <option value="{{ $group->id }}">{{ $group->groupname }}</option>
                                                                         @endforeach
                                                                     </select>
+                                                                    
                                                                 </div>
                                                             </div>
 
@@ -203,8 +231,94 @@
                                                 </div>
                                             </div>
 
+                                            @if(isset($group))
+                                            <button class="btn btn-sm ml-0" data-toggle="modal" data-target="#inviteUserModal-{{ $group->id }}">
+                                                <i class="fas fa-user-plus fa-2x" style="color: #72F0B7;"></i>
+                                            </button>
 
+                                            <!-- Modal para invitar usuarios a un grupo -->
+                                            <div class="modal fade" id="inviteUserModal-{{ $group->id }}" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalLabel-{{ $group->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="inviteUserModalLabel-{{ $group->id }}">Invitar Usuario al Grupo</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form method="POST" action="{{ route('groups.inviteUser', $group->id) }}">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="user_id">Selecciona un usuario</label>
+                                                                    <select name="user_id" id="user_id" class="form-control" required>
+                                                                        <option value="" disabled selected>Elige un usuario</option>
+                                                                        @foreach($users as $user)
+                                                                            <option value="{{ $user->id }}">{{ $user->username }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
 
+                                                                <div class="form-group">
+                                                                    <label for="role">Rol</label>
+                                                                    <select name="role" id="role" class="form-control" required>
+                                                                        <option value="read">Lector</option>
+                                                                        <option value="write">Escritor</option>
+                                                                        <option value="admin">Administrador</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Enviar invitación</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                            
+
+                                            <button class="btn btn-sm" data-toggle="modal" data-target="#notificationsModal">
+                                                <i class="fas fa-bell fa-2x" style="color: #72F0B7;"></i>
+                                            </button>
+                                            
+                                            <!-- Modal de Notificaciones -->
+                                            <div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if($invitations->isEmpty())
+                                                                <p>No tienes invitaciones pendientes.</p>
+                                                            @else
+                                                            @foreach($invitations as $invitation)
+                                                            @if($invitation->inviter)
+                                                                <p>{{ $invitation->inviter->username }} te ha invitado al grupo.</p>
+                                                            @else
+                                                                <p>El usuario que te invitó ya no existe.</p>
+                                                            @endif
+                                                            <form method="POST" action="{{ route('invitations.respond', $invitation->id) }}">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit" name="response" value="accepted" class="btn btn-success btn-sm">Aceptar</button>
+                                                                <button type="submit" name="response" value="rejected" class="btn btn-danger btn-sm">Rechazar</button>
+                                                            </form>
+                                                        @endforeach
+                                                        
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
 
 
 
@@ -329,7 +443,80 @@
                         
                     </div>
                 </div>
-            @endif
+            @endif 
+        </div> 
+                    <!-- Listas Compartidas -->
+                    <div class="container">
+    
+                        <div class="row">
+                    <div class="col-md-4">
+                        
+                    </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        @if($sharedTaskLists->count() > 0)
+                        <h4>Listas Compartidas Contigo</h4>
+                        @foreach($sharedTaskLists as $taskList)
+                            <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
+                                <i class="fas fa-share icon-check text-purple-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                                <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }} (Compartida)</small>
+                                <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                            </div>
+
+                                <!-- Contenedor de las tareas -->
+                                <ul class="list-group tasks-container" id="task-list-{{ $taskList->id }}" style="display: none;">
+                                    @foreach($taskList->tasks as $task)
+                                        <li class="list-group-item {{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'task-vencida' : '' }}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>{{ $task->titulo }}</strong>
+                                                    <p class="text-sm text-indigo-700">{{ $task->descripcion }}</p>
+                                                    <small class="text-gray-400">{{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'Vencido' : 'Vence' }}: {{ $task->fecha_vencimiento }}</small>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Checkbox para completar tarea -->
+                                                    <form method="POST" action="{{ route('tasks.updateStatus', $task->id) }}">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="completada" value="0">
+                                                        <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
+                                                        <span class=" badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <!-- Subtareas -->
+                                            @if ($task->subtasks && $task->subtasks->count() > 0)
+                                                <ul class="list-group mt-3">
+                                                    @foreach($task->subtasks as $subtask)
+                                                        <li class="list-group-item2">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div>
+                                                                    <strong class="text-sm text-gray-500">{{ $subtask->titulo }}</strong>
+                                                                    <form method="POST" action="{{ route('subtasks.updateStatus', $subtask->id) }}">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                        <input type="checkbox" name="completado" value="1" class="form-check-input ml-1" {{ $subtask->completado ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                        <span>&#160;&#160;&#160;&#160;&#160;</span>
+                                                                        <span class="badge badge-{{ $subtask->completado ? 'success' : 'secondary' }}">{{ $subtask->completado ? 'Completada' : 'Pendiente' }}</span>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+                    
         </div>
     </div>
 </div>

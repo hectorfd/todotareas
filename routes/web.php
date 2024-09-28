@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\InvitationController;
 
 
 /*
@@ -129,4 +130,7 @@ Route::get('/task-lists/{taskList}/tasks', [TaskListController::class, 'getTasks
 Route::resource('groups', GroupController::class);
 Route::put('task_lists/{id}/assign-group', [TaskListController::class, 'assignGroup'])->name('task_lists.assignGroup');
 Route::get('/dashboard', [TaskListController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
+Route::post('/groups/{group}/invite', [GroupController::class, 'inviteUser'])->name('groups.inviteUser');
+Route::put('/invitations/{invitation}/respond', [InvitationController::class, 'respond'])->name('invitations.respond');
