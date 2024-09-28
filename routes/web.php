@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Api\GroupController;
 
 
 /*
@@ -124,4 +125,8 @@ Route::patch('/subtasks/{subtask}/update-status', [SubtaskController::class, 'up
 Route::delete('/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->name('subtasks.destroy');
 
 Route::get('/task-lists/{taskList}/tasks', [TaskListController::class, 'getTasks'])->name('task-lists.tasks');
+
+Route::resource('groups', GroupController::class);
+Route::put('task_lists/{id}/assign-group', [TaskListController::class, 'assignGroup'])->name('task_lists.assignGroup');
+Route::get('/dashboard', [TaskListController::class, 'index'])->name('dashboard');
 

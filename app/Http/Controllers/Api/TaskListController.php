@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TaskList;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Group;
 
 class TaskListController extends Controller
 {
@@ -14,7 +15,11 @@ class TaskListController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $taskLists = TaskList::where('user_id', $user->id)->get(); 
+        $groups = Group::where('user_id', $user->id)->get(); 
+
+        return view('dashboard', compact('taskLists', 'groups'));
     }
 
     /**
@@ -94,6 +99,19 @@ class TaskListController extends Controller
         return response()->json([
             'tasks' => $taskList->tasks
         ]);
+    }
+
+    public function assignGroup(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'group_id' => 'required|exists:groups,id',
+        ]);
+
+        $taskList = TaskList::findOrFail($id);
+        $taskList->group_id = $request->group_id;
+        $taskList->save();
+
+        return redirect()->back()->with('success', 'Lista de tareas asignada al grupo exitosamente');
     }
 
     
