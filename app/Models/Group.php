@@ -13,4 +13,16 @@ class Group extends Model
         'descripcion',
         'user_id',
     ];
+    public function members()
+    {
+        return $this->hasMany(GroupMember::class);
+    }
+
+    public function groupMembers()
+    {
+        return $this->hasMany(GroupMember::class);
+    }
+
+
+    
 }
