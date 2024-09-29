@@ -41,8 +41,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 140%;
+            height: 120%;
             overflow: hidden;
             z-index: -1; 
         }
@@ -57,7 +57,7 @@
             z-index: -100;
             transform: translate(-50%, -50%);
             background-size: cover;
-            filter: blur(0px); 
+            filter: blur(5px); 
         }
 
 
@@ -65,11 +65,11 @@
 </head>
 <body class="">
     
-    <div class="min-h-screen">
+    <div class="min-h-screen ">
         <div class="video-container">
             <video autoplay muted loop id="background-video">
                 
-                <source src="{{ asset('images/fondo5.mp4') }}" type="video/mp4">
+                <source src="{{ asset('images/fondo.mp4') }}" type="video/mp4">
                 Tu navegador no soporta la etiqueta de video.
                 <div class="blur-overlay"></div> 
             </video>
@@ -87,7 +87,7 @@
 
         <!-- Page Content -->
         <main>
-            <div class="max-w-[1000px] mx-auto p-4 bg-black bg-custom rounded-lg shadow-lg">
+            <div class="max-w-[1100px] mx-auto p-4 bg-custom4  rounded-lg shadow-lg">
                 @yield('content')
             </div>
         </main>
