@@ -7,35 +7,36 @@
         <div class="col-md-4">
             <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
-                    <h2 class="mb-0 font-bold ">Tus Listas</h2>
+                    <h2 class="mb-0 font-bold text-black">Tus Listas</h2>
                     <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                 </div>
-                <div class="list-group">
+        
+                <!-- Caja de listas con scroll -->
+                <div class="list-group overflow-y-auto max-h-[560px]"> <!-- Añadido el scroll vertical -->
                     <!-- Listas propias -->
                     @foreach($taskLists as $taskList)
-                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer"
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-custom"
                         onclick="showTasks({{ $taskList->id }})"
                         @if(request('list') == $taskList->id) style="background-color: #f0f8ff;" @endif> <!-- Condición para mantener la lista seleccionada visible -->
-                        <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
+                        <i class="fas fa-check icon-check" onclick="event.stopPropagation(); openIconModal();"></i>
                         <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
-                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
+                        <span class="rounded-full px-3 py-1 text-sm text-white bg-custom2">{{ count($taskList->tasks) }}</span>
                     </div>
                     @endforeach
-            
+                    
                     <!-- Listas compartidas -->
                     @foreach($sharedTaskLists as $taskList)
-                        <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-indigo-100"
-                            onclick="showTasks({{ $taskList->id }})"
-                            @if(request('list') == $taskList->id) style="background-color: #f0f8ff;" @endif> <!-- Condición para mantener la lista seleccionada visible -->
-                            <i class="fas fa-share-alt icon-check text-blue-500" onclick="event.stopPropagation(); openIconModal();"></i>
-                            <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }} (Compartida)</small>
-                            <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
-                        </div>
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-lavender"
+                        onclick="showTasks({{ $taskList->id }})"
+                        @if(request('list') == $taskList->id) style="background-color: #f0f8ff;" @endif> <!-- Condición para mantener la lista seleccionada visible -->
+                        <i class="fas fa-share-alt icon-check text-gray-400" onclick="event.stopPropagation(); openIconModal();"></i>
+                        <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }} (Compartida)</small>
+                        <span class="rounded-full px-3 py-1 text-sm text-white bg-custom2">{{ count($taskList->tasks) }}</span>
+                    </div>
                     @endforeach
                 </div>
             </div>
         </div>
-        
         
         
         
@@ -70,7 +71,8 @@
         <div class="col-md-8">
             <div class="d-flex align-items-center justify-content-between mb-3"> 
                 <div class="d-flex align-items-center"> 
-                    <div class="mr-3">
+                    <div class="mr-1">
+                        <a href="{{ route('profile.edit') }}" class="btn btn-indigo ml-2">
                         @if(Auth::user()->foto)
                             @if(filter_var(Auth::user()->foto, FILTER_VALIDATE_URL))
                                 <img src="{{ Auth::user()->foto }}" alt="Foto de Perfil" style="width: 50px; height: 50px; border-radius: 50%;">
@@ -82,16 +84,60 @@
                                 Sin foto
                             </div>
                         @endif
+                    </a>
 
                     </div>
                     <div>
-                        <span class="font-bold">{{ Auth::user()->username }}</span>
+                        <span class="font-bold animate-colorChange text-lg">{{ Auth::user()->username }}</span>
+                        
                     </div>
+                    
                 </div>
-                <div> 
-                    <a href="{{ route('profile.edit') }}" class="btn btn-primary">
-                        <i class="fas fa-edit mr-2"></i>Editar Perfil
-                    </a>
+                
+
+                
+                <div>
+                    @if($taskLists->count() > 0 || $sharedTaskLists->count() > 0) 
+                    <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
+                        <i class="fas fa-bell fa-2x" style="color: #F97E72;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#F97E72';"></i>
+                    </button>
+                    
+                    <!-- Modal de Notificaciones -->
+                    <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
+    
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @if($invitations->isEmpty())
+                                        <p>No tienes invitaciones pendientes.</p>
+                                    @else
+                                    @foreach($invitations as $invitation)
+                                    @if($invitation->inviter)
+                                        <p>{{ $invitation->inviter->username }} te ha invitado al grupo.</p>
+                                    @else
+                                        <p>El usuario que te invitó ya no existe.</p>
+                                    @endif
+                                    <form method="POST" action="{{ route('invitations.respond', $invitation->id) }}">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" name="response" value="accepted" class="btn btn-success btn-sm">Aceptar</button>
+                                        <button type="submit" name="response" value="rejected" class="btn btn-danger btn-sm">Rechazar</button>
+                                    </form>
+                                @endforeach
+                                
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    
                 </div>
             </div>
 
@@ -104,35 +150,36 @@
                 </div>
             @endif
 
-            @if($taskLists->count() > 0)
-                <div class="card-body">
-                    
+            @if($taskLists->count() > 0 )
+                <div class="card-body bg-custom rounded">
                         @foreach($taskLists as $taskList)
                             <!-- Contenedor de las tareas de cada lista, inicialmente oculto -->
+                            
                             <ul class="list-group tasks-container" id="task-list-{{ $taskList->id }}" style="display: none;">
+                                <h4 class="font-bold">{{ $taskList->listName }}</h4>
+                                <br>
                                 <li class="">
                                     <div class="d-flex justify-content-between align-items-center">
+                                        
                                         <button class="btn btn-link toggle-tasks" data-target="tasks-{{ $taskList->id }}">
                                             <i class="fas fa-tasks mr-2"></i>
                                         </button>
-                                        <h4 class="font-bold">{{ $taskList->listName }}</h4>
-                                        <div class="d-flex align-items-center">
+                                        {{-- <h4 class="font-bold">{{ $taskList->listName }}</h4> --}}
+                                        
                                             
-                                            
+                                            <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-indigo btn-sm bg-emerald text-white border border-transparent hover:bg-mustard hover:border-turquoiseDark">Crear tarea</a>
 
-                                            <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-primary btn-sm">Crear tarea</a>
-
-                                            <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-success ml-2 btn-sm">
-                                                <i class="fas fa-check-square mr-0 text-white"></i>
+                                            <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-indigo ml-2 btn-sm">
+                                                <i class="fas fa-check-square fa-2x mr-0" style="color: #1ED760;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#1ED760';"></i>
                                             </a>
 
-                                            <button class="btn btn-info ml-2 btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}">
-                                                <i class="fas fa-pencil-alt mr-0 text-white"></i>
+                                            <button class="btn btn-indigo  btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}">
+                                                <i class="fas fa-pen-square mr-0 fa-2x" style="color: #2AC2D1;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#2AC2D1';"></i>
                                             </button>
 
                                             <!-- Botón para crear un nuevo grupo -->
                                             <button class="btn btn-indigo btn-sm ml-0" data-toggle="modal" data-target="#createGroupModal-{{ $taskList->id }}">
-                                                <i class="fas fa-briefcase fa-2x" style="color: #9367EB;"></i>
+                                                <i class="fas fa-folder fa-2x" style="color: #9367EB;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#9367EB';"></i>
                                             </button>
                                             
                                             <!-- Modal -->
@@ -171,7 +218,7 @@
                                             </div>
 
                                             <button class="btn  btn-sm ml-0" data-toggle="modal" data-target="#assignGroupModal-{{ $taskList->id }}">
-                                                <i class="fas fa-plus-square fa-2x" style="color: #72F0B7;"></i>
+                                                <i class="fas fa-plus-square fa-2x" style="color: #72F0B7;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#72F0B7';"></i>
                                             </button>
 
                                             <!-- Modal para asignar lista de tareas a un grupo -->
@@ -210,16 +257,9 @@
                                                 </div>
                                             </div>
 
-                                        
-                                            
-
-                                            {{-- @if(isset($group))
-                                            <button data-toggle="modal" data-target="#inviteUserModal-{{ $group->id }}">
-                                                <i class="fas fa-user-plus fa-2x" style="color: #72F0B7;"></i>
-                                            </button> --}}
                                             @if($taskList->group_id)
                                             <button data-toggle="modal" data-target="#inviteUserModal-{{ $taskList->id }}-{{ $taskList->group_id }}">
-                                                <i class="fas fa-user-plus fa-2x" style="color: #72F0B7;"></i>
+                                                <i class=" fas fa-user-plus fa-lg" style="color: #343A40;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#343A40';"></i>
                                             </button>
                                             @endif
                                             @if($taskList->group_id)
@@ -266,59 +306,17 @@
                                         @endif
                                             
 
-                                            <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
-                                                <i class="fas fa-bell fa-2x" style="color: #72F0B7;"></i>
-                                            </button>
-                                            
-                                            <!-- Modal de Notificaciones -->
-                                            <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
-
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            @if($invitations->isEmpty())
-                                                                <p>No tienes invitaciones pendientes.</p>
-                                                            @else
-                                                            @foreach($invitations as $invitation)
-                                                            @if($invitation->inviter)
-                                                                <p>{{ $invitation->inviter->username }} te ha invitado al grupo.</p>
-                                                            @else
-                                                                <p>El usuario que te invitó ya no existe.</p>
-                                                            @endif
-                                                            <form method="POST" action="{{ route('invitations.respond', $invitation->id) }}">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <button type="submit" name="response" value="accepted" class="btn btn-success btn-sm">Aceptar</button>
-                                                                <button type="submit" name="response" value="rejected" class="btn btn-danger btn-sm">Rechazar</button>
-                                                            </form>
-                                                        @endforeach
-                                                        
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            
-
-
-
-
-                                            
+                                        <div class="d-flex align-items-center">
 
                                             <form method="POST" action="{{ route('task_lists.destroy', $taskList->id) }}" class="inline-block ml-1 delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-sm delete-btn">
-                                                    <i class="fas fa-trash-alt mr-0 text-white"></i>
+                                                <button type="button" class="btn btn-indigo btn-sm delete-btn">
+                                                    <i class="fas fa-times mr-0 fa-2x" style="color: #BAC2C7; " onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#BAC2C7';"></i>
                                                 </button>
                                             </form>
+
+                                        
 
                                             
                                         </div>
@@ -342,14 +340,14 @@
                                                             <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
                                                             <span class=" badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                         </form>
-                                                        <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
-                                                            <i class="far fa-edit mr-0 text-white"></i>
+                                                        <button class="btn btn-indigo btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
+                                                            <i class="far fa-edit mr-0 fa-2x" style="color: #FFCC41;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#FFCC41';"></i>
                                                         </button>
                                                         <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="ml-2 delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="btn btn-sm btn-danger  delete-btn">
-                                                                <i class="fas fa-times mr-0 text-indigo hover:text-white " ></i>
+                                                            <button type="button" class="btn btn-sm btn-indigo  delete-btn">
+                                                                <i class="fas fa-times mr-0 fa-lg " style="color: #BAC2C7;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#BAC2C7';"></i>
                                                             </button>
                                                         </form>
                                                     </div>
@@ -426,23 +424,22 @@
                             </ul>
                             
                         @endforeach
-
-                        
                     </div>
                 </div>
             @endif 
         </div> 
                     <!-- Listas Compartidas -->
                     <div class="container">
-    
+
                         <div class="row">
                     <div class="col-md-4">
                         
                     </div>
+                    
                     <div class="col-md-8">
-                    <div class="card-body">
+                        <div class="card-body bg-custom3 rounded">
                         @if($sharedTaskLists->count() > 0)
-                        <h4>Listas Compartidas Contigo</h4>
+                        <h3>Listas Compartidas Contigo</h3>
                         @foreach($sharedTaskLists as $taskList)
                             <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
                                 <i class="fas fa-share icon-check text-purple-500" onclick="event.stopPropagation(); openIconModal();"></i>
@@ -452,6 +449,7 @@
 
                                 <!-- Contenedor de las tareas -->
                                 <ul class="list-group tasks-container" id="task-list-{{ $taskList->id }}" style="display: none;">
+                                    
                                     @foreach($taskList->tasks as $task)
                                         <li class="list-group-item {{ $task->fecha_vencimiento && $task->fecha_vencimiento < now() && !$task->completada ? 'task-vencida' : '' }}">
                                             <div class="d-flex justify-content-between align-items-center">
@@ -469,8 +467,9 @@
                                                         <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
                                                         <span class=" badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                     </form>
-                                                    <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
-                                                        <i class="far fa-edit mr-0 text-white"></i>
+                                                    
+                                                    <button class="btn btn-indigo btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
+                                                        <i class="far fa-edit mr-0 fa-2x" style="color: #FFCC41;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#FFCC41';"></i>
                                                     </button>
                                                     
                                                     <div class="modal fade" id="editTaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModalLabel-{{ $task->id }}" aria-hidden="true">
@@ -536,12 +535,15 @@
                                                             </div>
                                                         </li>
                                                     @endforeach
+                                                    
                                                 </ul>
                                             @endif
 
                                             <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">
                                                 Crear subtarea
                                             </button>
+
+                                            
 
                                             <!-- Modal para crear subtarea -->
                                             <div class="modal fade" id="createSubtaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="createSubtaskModalLabel-{{ $task->id }}" aria-hidden="true">
@@ -572,11 +574,16 @@
                                                 </div>
                                             </div>
                                         </li>
+                                        <p><br></p>
                                     @endforeach
+                                    
                                 </ul>
                             @endforeach
+                            <p><br><br></p>
                         </div>
-                    @endif
+                        @endif
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -654,8 +661,8 @@
                     text: "¡Deseas Eliminar!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#72F0B7',
+                    cancelButtonColor: '#FF5E00',
                     confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
