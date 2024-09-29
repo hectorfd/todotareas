@@ -4,24 +4,6 @@
 <div class="container">
     
     <div class="row">
-        <!-- Slider Dinámico -->
-        {{-- <div class="col-md-4">
-            <div class="card panel-listas panel-listas-fixed">
-                <div class="card-header">
-                    <h2 class="mb-0 font-bold ">Tus Listas</h2>
-                    <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
-                </div>
-                <div class="list-group">
-                    @foreach($taskLists as $taskList)
-                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
-                        <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
-                        <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
-                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div> --}}
         <div class="col-md-4">
             <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
@@ -31,24 +13,20 @@
                 <div class="list-group">
                     <!-- Listas propias -->
                     @foreach($taskLists as $taskList)
-                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $taskList->id }})">
+                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer"
+                        onclick="showTasks({{ $taskList->id }})"
+                        @if(request('list') == $taskList->id) style="background-color: #f0f8ff;" @endif> <!-- Condición para mantener la lista seleccionada visible -->
                         <i class="fas fa-check icon-check text-green-500" onclick="event.stopPropagation(); openIconModal();"></i>
                         <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }}</small>
                         <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
                     </div>
                     @endforeach
-        
+            
                     <!-- Listas compartidas -->
-                    {{-- @foreach($sharedTaskLists as $sharedTaskList)
-                    <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer" onclick="showTasks({{ $sharedTaskList->id }})" style="background-color: #E0F7FA;"> <!-- Cambia el color para listas compartidas -->
-                        <i class="fas fa-share icon-check text-blue-500" onclick="event.stopPropagation(); openIconModal();"></i>
-                        <small class="text-sm flex-grow text-blue-800 ml-2">{{ $sharedTaskList->listName }} (Compartida)</small>
-                        <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($sharedTaskList->tasks) }}</span>
-                    </div>
-                    @endforeach --}}
-                    <!-- Mostrar las listas compartidas con el usuario -->
                     @foreach($sharedTaskLists as $taskList)
-                        <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-indigo-100" onclick="showTasks({{ $taskList->id }})">
+                        <div class="list-group-item flex justify-between items-center px-3 py-2 cursor-pointer bg-indigo-100"
+                            onclick="showTasks({{ $taskList->id }})"
+                            @if(request('list') == $taskList->id) style="background-color: #f0f8ff;" @endif> <!-- Condición para mantener la lista seleccionada visible -->
                             <i class="fas fa-share-alt icon-check text-blue-500" onclick="event.stopPropagation(); openIconModal();"></i>
                             <small class="text-sm flex-grow text-gray-800 ml-2">{{ $taskList->listName }} (Compartida)</small>
                             <span class="badge panel-listas rounded-full px-3 py-1 text-sm">{{ count($taskList->tasks) }}</span>
@@ -57,6 +35,7 @@
                 </div>
             </div>
         </div>
+        
         
         
         
@@ -231,22 +210,30 @@
                                                 </div>
                                             </div>
 
-                                            @if(isset($group))
-                                            <button class="btn btn-sm ml-0" data-toggle="modal" data-target="#inviteUserModal-{{ $group->id }}">
+                                        
+                                            
+
+                                            {{-- @if(isset($group))
+                                            <button data-toggle="modal" data-target="#inviteUserModal-{{ $group->id }}">
+                                                <i class="fas fa-user-plus fa-2x" style="color: #72F0B7;"></i>
+                                            </button> --}}
+                                            @if($taskList->group_id)
+                                            <button data-toggle="modal" data-target="#inviteUserModal-{{ $taskList->id }}-{{ $taskList->group_id }}">
                                                 <i class="fas fa-user-plus fa-2x" style="color: #72F0B7;"></i>
                                             </button>
-
-                                            <!-- Modal para invitar usuarios a un grupo -->
-                                            <div class="modal fade" id="inviteUserModal-{{ $group->id }}" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalLabel-{{ $group->id }}" aria-hidden="true">
+                                            @endif
+                                            @if($taskList->group_id)
+                                            <!-- Modal para invitar usuarios al grupo -->
+                                            <div class="modal fade" id="inviteUserModal-{{ $taskList->id }}-{{ $taskList->group_id }}" tabindex="-1" role="dialog" aria-labelledby="inviteUserModalLabel-{{ $taskList->id }}-{{ $taskList->group_id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="inviteUserModalLabel-{{ $group->id }}">Invitar Usuario al Grupo</h5>
+                                                            <h5 class="modal-title" id="inviteUserModalLabel-{{ $taskList->group_id }}">Invitar Usuario al Grupo</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <form method="POST" action="{{ route('groups.inviteUser', $group->id) }}">
+                                                        <form method="POST" action="{{ route('groups.inviteUser', $taskList->group_id) }}">
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <div class="form-group">
@@ -258,7 +245,7 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
-
+                                    
                                                                 <div class="form-group">
                                                                     <label for="role">Rol</label>
                                                                     <select name="role" id="role" class="form-control" required>
@@ -277,15 +264,15 @@
                                                 </div>
                                             </div>
                                         @endif
-
                                             
 
-                                            <button class="btn btn-sm" data-toggle="modal" data-target="#notificationsModal">
+                                            <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
                                                 <i class="fas fa-bell fa-2x" style="color: #72F0B7;"></i>
                                             </button>
                                             
                                             <!-- Modal de Notificaciones -->
-                                            <div class="modal fade" id="notificationsModal" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
+
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -482,6 +469,51 @@
                                                         <input type="checkbox" name="completada" value="1" class="form-check-input" {{ $task->completada ? 'checked' : '' }} onchange="this.form.submit()">
                                                         <span class=" badge badge-{{ $task->completada ? 'success' : 'secondary' }}">{{ $task->completada ? 'Completada' : 'Pendiente' }}</span>
                                                     </form>
+                                                    <button class="btn btn-warning btn-sm ml-2" data-toggle="modal" data-target="#editTaskModal-{{ $task->id }}">
+                                                        <i class="far fa-edit mr-0 text-white"></i>
+                                                    </button>
+                                                    
+                                                    <div class="modal fade" id="editTaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModalLabel-{{ $task->id }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="editTaskModalLabel-{{ $task->id }}">Editar Tarea: {{ $task->titulo }}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form method="POST" action="{{ route('tasks.update', $task->id) }}">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <div class="modal-body">
+                                                                        <!-- Título de la tarea -->
+                                                                        <div class="form-group">
+                                                                            <label for="titulo-{{ $task->id }}">Título</label>
+                                                                            <input type="text" class="form-control" id="titulo-{{ $task->id }}" name="titulo" value="{{ $task->titulo }}">
+                                                                        </div>
+                                                                        
+                                                                        <!-- Descripción de la tarea -->
+                                                                        <div class="form-group">
+                                                                            <label for="descripcion-{{ $task->id }}">Descripción</label>
+                                                                            <textarea class="form-control" id="descripcion-{{ $task->id }}" name="descripcion">{{ $task->descripcion }}</textarea>
+                                                                        </div>
+                                                    
+                                                                        <!-- Fecha de vencimiento -->
+                                                                        <div class="form-group">
+                                                                            <label for="fecha_vencimiento-{{ $task->id }}">Fecha de Vencimiento</label>
+                                                                            <input type="datetime-local" class="form-control" id="fecha_vencimiento-{{ $task->id }}" name="fecha_vencimiento" value="{{ $task->fecha_vencimiento ? \Carbon\Carbon::parse($task->fecha_vencimiento)->format('Y-m-d\TH:i') : '' }}">
+                                                                        </div>
+                                                    
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                        <button type="submit" class="btn btn-primary">Actualizar Tarea</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
 
@@ -506,6 +538,39 @@
                                                     @endforeach
                                                 </ul>
                                             @endif
+
+                                            <button class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#createSubtaskModal-{{ $task->id }}">
+                                                Crear subtarea
+                                            </button>
+
+                                            <!-- Modal para crear subtarea -->
+                                            <div class="modal fade" id="createSubtaskModal-{{ $task->id }}" tabindex="-1" role="dialog" aria-labelledby="createSubtaskModalLabel-{{ $task->id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="createSubtaskModalLabel-{{ $task->id }}">Crear Subtarea</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        
+                                                        <form method="POST" action="{{ route('subtasks.store', $task->id) }}">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="titulo">Título</label>
+                                                                    <input type="text" name="titulo" class="form-control" required>
+                                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </li>
                                     @endforeach
                                 </ul>
@@ -638,6 +703,30 @@
             $('#iconModal').modal('hide'); // Oculta el modal
         }
 
+    </script>
+
+    <script>
+        function showTasks(taskListId) {
+            // Cambiar el URL a /dashboard?list=taskListId
+            window.history.pushState(null, '', '/dashboard?list=' + taskListId);
+
+            // Aquí puedes agregar el código que necesitas para mostrar las tareas de esa lista
+            document.querySelectorAll('.tasks-container').forEach(function(container) {
+                container.style.display = 'none'; // Ocultar todas las listas de tareas
+            });
+            
+            document.getElementById('task-list-' + taskListId).style.display = 'block'; // Mostrar la lista seleccionada
+        }
+
+        // Mantener la lista seleccionada visible al cargar la página
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedListId = urlParams.get('list');
+
+            if (selectedListId) {
+                showTasks(selectedListId); // Mostrar la lista seleccionada
+            }
+        };
     </script>
 
 @endsection
