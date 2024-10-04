@@ -19,8 +19,10 @@ return new class extends Migration
             $table->integer('telefono')->nullable();
             $table->string('direccion',100)->nullable();
             $table->string('email',60)->unique();
+            $table->string('foto')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password',255);
+            $table->string('password',255)->nullable();
+            $table->string('google_id',255)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

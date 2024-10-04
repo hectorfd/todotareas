@@ -1,9 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body{
-    background-image: url('../../public/images/fondo2.jpg');
+    /* background-image: url('../../public/images/fondo2.jpg'); */
+    font-family: 'Poppins', sans-serif;
 }
 
 .form-container {
@@ -11,7 +20,7 @@ body{
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
 }
 .form-group {
@@ -49,10 +58,22 @@ body{
 .submit-button:hover {
     background-color: #138AF2;
 }
-
+/* 
 .bg-custom {
-    background-color: rgba(255, 255, 255, 0.7); 
+    background-color: #F4F8FB; 
+} */
+.bg-custom {
+    background-color: rgba(244, 248, 251, 0.9); 
+    /* background-image: url('../../public/images/fondo1.jpg'); */
 }
+.bg-custom2 {
+    background-color: #72F0B7; 
+}
+
+.bg-custom4 {
+    background-color: rgba(244, 248, 251, 0.9); 
+}
+
 .task-vencida {
     color: red;
 }
@@ -69,4 +90,148 @@ body{
     background-color: #165873;  
     border-color: #003C4C; 
 
+}
+.list-group-item {
+    /* border: none; */
+    border-top: 4px solid #F6F7F7;
+    border-bottom: 4px solid #F6F7F7;
+    transition: border-color 0.3s ease-in-out; 
+}
+.list-group-item2 {
+    border: none;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 4px;
+    border-top: 1px solid #ccc;
+   
+     
+}
+
+.list-group-item:hover {
+    border-top-color: #9333EA; 
+    border-bottom-color: #9333EA;
+}
+
+@keyframes animateBorder {
+    from {
+        border-color: transparent;
+    }
+    to {
+        border-color: #007bff; 
+    }
+}
+
+/* Estilos base para el panel de listas */
+.panel-listas {
+    background-color: #ffffff; 
+    color: #0000;
+    border: none;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); */
+    
+}
+
+.panel-listas .card-header {
+    /* background-color: #0D2340;  */
+    color: #0000;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.panel-listas .list-group-item {
+    /* background-color: #343a40; */
+    /* border-top: 1px solid #ccc; */
+    /* color: #ffffff; */
+    border: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    transition: background-color 0.3s;
+    border-top: 2px solid #ccc;
+    margin: 4px;
+}
+
+.panel-listas .list-group-item:hover {
+    background-color: #a3cbea;
+    
+}
+
+.panel-listas .icon-check {
+    color: #72F0B7; 
+    margin-right: 10px;
+    
+}
+
+.panel-listas .task-count {
+    background-color: #17A2B8; 
+    color: #0000;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto; 
+    font-weight: bold; 
+    
+}
+
+.panel-listas .btn-primary {
+    background-color: #72F0B7; 
+    
+}
+.panel-listas .btn-primary:hover {
+    background-color: #6dff9b; 
+    
+}
+
+
+.panel-listas-fixed {
+    position: fixed; 
+    top: 80px; 
+    width: 300px; 
+    max-height: calc(100vh - 40px); 
+    overflow-y: auto; 
+    z-index: 10; 
+}
+
+/* para google */
+
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.google-btn:hover {
+    background-color: #357AE8;
+}
+
+.google-btn:active {
+    background-color: #3367D6;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.center-container {
+    text-align: center;
+    margin-top: 20px; 
 }

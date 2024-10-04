@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -23,21 +24,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    // public function update(ProfileUpdateRequest $request): RedirectResponse
-    // {
-    //     $request->user()->fill($request->validated());
-
-    //     if ($request->user()->isDirty('email')) {
-    //         $request->user()->email_verified_at = null;
-    //     }
-
-    //     $request->user()->save();
-
-    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    // }
+    
     public function update(Request $request)
     {
         $request->validate([
@@ -48,6 +35,7 @@ class ProfileController extends Controller
             'direccion' => 'nullable|string|max:100',
             'email' => 'required|string|email|max:60|unique:users,email,' . Auth::id(),
             'password' => 'nullable|string|min:8|confirmed',
+            'foto' => 'nullable|image|max:2048', 
         ]);
 
         $user = Auth::user();
@@ -57,6 +45,16 @@ class ProfileController extends Controller
         $user->telefono = $request->telefono;
         $user->direccion = $request->direccion;
         $user->email = $request->email;
+
+        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+            
+            if ($user->foto) {
+                Storage::delete($user->foto);
+            }
+            
+            $path = $request->foto->store('public/fotos');
+            $user->foto = $path;
+        }
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
