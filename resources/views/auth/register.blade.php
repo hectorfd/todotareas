@@ -12,7 +12,7 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-DWQmf9-2.css') }}">">
     <script src="{{ asset('build/assets/app.[hash].js') }}" defer></script> --}}
-    {{-- <link rel="stylesheet" href="{{ asset('build/assets/app-DWQmf9-2.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('build/assets/app-Cxh7EvVI.css') }}">
     @vite(['resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
     <style>
         .video-container {

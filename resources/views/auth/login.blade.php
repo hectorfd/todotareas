@@ -7,7 +7,7 @@
     
 
     <title>Login</title>
-    
+    <link rel="stylesheet" href="{{ asset('build/assets/app-Cxh7EvVI.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .video-container {
