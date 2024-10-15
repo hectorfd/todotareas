@@ -789,7 +789,7 @@
     });
 });
 
-    </script>
+</script>
     
 
 @endsection
