@@ -97,48 +97,71 @@
 
                 
                 <div>
-                    @if($taskLists->count() > 0 || $sharedTaskLists->count() > 0) 
-                    <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
-                        <i class="fas fa-bell fa-2x" style="color: #F97E72;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#F97E72';"></i>
-                    </button>
-                    
-                    <!-- Modal de Notificaciones -->
-                    <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
-    
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    @if($invitations->isEmpty())
-                                        <p>No tienes invitaciones pendientes.</p>
-                                    @else
-                                    @foreach($invitations as $invitation)
-                                    @if($invitation->inviter)
-                                        <p>{{ $invitation->inviter->username }} te ha invitado al grupo.</p>
-                                    @else
-                                        <p>El usuario que te invitó ya no existe.</p>
-                                    @endif
-                                    <form method="POST" action="{{ route('invitations.respond', $invitation->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" name="response" value="accepted" class="btn btn-success btn-sm">Aceptar</button>
-                                        <button type="submit" name="response" value="rejected" class="btn btn-danger btn-sm">Rechazar</button>
-                                    </form>
-                                @endforeach
-                                
-                                    @endif
+                    @if($taskLists->count() > 0 || $sharedTaskLists->count() > 0)
+                        @php
+                            $hayNotificaciones = !$invitations->isEmpty() || ($expiredTasks && !$expiredTasks->isEmpty());
+                            $iconColor = $hayNotificaciones ? '#F97E72' : '#28a745'; 
+                        @endphp
+                        
+                        <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
+                            <i class="fas fa-bell fa-2x" style="color: {{ $iconColor }};" 
+                               onmouseover="this.style.color='#FF5E00';" 
+                               onmouseout="this.style.color='{{ $iconColor }}';"></i>
+                        </button>
+                
+                        <!-- Modal de Notificaciones -->
+                        <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="notificationsModalLabel">Notificaciones</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Invitaciones -->
+                                        @if($invitations->isEmpty())
+                                            <p>No tienes invitaciones pendientes.</p>
+                                        @else
+                                            @foreach($invitations as $invitation)
+                                                @if($invitation->inviter)
+                                                    <p>{{ $invitation->inviter->username }} te ha invitado al grupo.</p>
+                                                @else
+                                                    <p>El usuario que te invitó ya no existe.</p>
+                                                @endif
+                                                <form method="POST" action="{{ route('invitations.respond', $invitation->id) }}">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" name="response" value="accepted" class="btn btn-success btn-sm">Aceptar</button>
+                                                    <button type="submit" name="response" value="rejected" class="btn btn-danger btn-sm">Rechazar</button>
+                                                </form>
+                                            @endforeach
+                                        @endif
+                
+                                        <!-- Tareas vencidas -->
+                                        <h5 class="mt-4 text-lg font-semibold">Tareas Vencidas</h5>
+                                        @isset($expiredTasks)
+                                            @if($expiredTasks->isEmpty())
+                                                <p class="text-gray-500">No tienes tareas vencidas.</p>
+                                            @else
+                                                @foreach($expiredTasks as $task)
+                                                    <div class="flex justify-between items-center mb-2 p-2 border border-red-300 rounded bg-red-50">
+                                                        <p class="text-red-600">
+                                                            Tarea: {{ $task->titulo }} - Vencida el: {{ \Carbon\Carbon::parse($task->fecha_vencimiento)->format('d/m/Y H:i') }}
+                                                        </p>
+                                                        <a href="{{ route('dashboard', ['list' => $task->task_list_id]) }}" class="btn btn-primary btn-sm">Ver</a>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        @endisset
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endif
-                    
                 </div>
+                
             </div>
 
             @if($taskLists->count() == 0)
