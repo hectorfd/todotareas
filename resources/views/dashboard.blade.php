@@ -103,11 +103,21 @@
                             $iconColor = $hayNotificaciones ? '#F97E72' : '#28a745'; 
                         @endphp
                         
-                        <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
+                        {{-- <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}" data-toggle="tooltip" title="Ver Notificaciones">
                             <i class="fas fa-bell fa-2x" style="color: {{ $iconColor }};" 
-                               onmouseover="this.style.color='#FF5E00';" 
-                               onmouseout="this.style.color='{{ $iconColor }}';"></i>
-                        </button>
+                                onmouseover="this.style.color='#FF5E00';" 
+                                onmouseout="this.style.color='{{ $iconColor }}';"></i>
+                        </button> --}}
+                        <div class="tooltip-container">
+                            <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
+                                <i class="fas fa-bell fa-2x" style="color: {{ $iconColor }};" 
+                                    onmouseover="this.style.color='#FF5E00';" 
+                                    onmouseout="this.style.color='{{ $iconColor }}';"></i>
+                            </button>
+                            <span class="tooltiptext">Ver Notificaciones</span>
+                        </div>
+                        
+                        
                 
                         <!-- Modal de Notificaciones -->
                         <div class="modal fade" id="notificationsModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="notificationsModalLabel-{{ $taskList->id }}" aria-hidden="true">
@@ -191,19 +201,27 @@
                                         
                                             
                                             <a href="{{ route('tasks.create', $taskList->id) }}" class="btn btn-indigo btn-sm bg-emerald text-white border border-transparent hover:bg-mustard hover:border-turquoiseDark">Crear tarea</a>
-
-                                            <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-indigo ml-2 btn-sm">
-                                                <i class="fas fa-check-square fa-2x mr-0" style="color: #1ED760;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#1ED760';"></i>
-                                            </a>
-
+                                            <div class="tooltip-container">
+                                                <a href="{{ route('tasks.completed', $taskList->id) }}" class="btn btn-indigo ml-2 btn-sm">
+                                                    <i class="fas fa-check-square fa-2x mr-0" style="color: #1ED760;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#1ED760';"></i>
+                                                </a>
+                                                <span class="tooltiptext">Ver tareas completadas</span>
+                                            </div>
+                                            
+                                            <div class="tooltip-container">
                                             <button class="btn btn-indigo  btn-sm" data-toggle="modal" data-target="#editTaskListModal-{{ $taskList->id }}">
                                                 <i class="fas fa-pen-square mr-0 fa-2x" style="color: #2AC2D1;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#2AC2D1';"></i>
                                             </button>
+                                            <span class="tooltiptext">Editar lista</span>
+                                            </div>
 
                                             <!-- Botón para crear un nuevo grupo -->
+                                            <div class="tooltip-container">
                                             <button class="btn btn-indigo btn-sm ml-0" data-toggle="modal" data-target="#createGroupModal-{{ $taskList->id }}">
                                                 <i class="fas fa-folder fa-2x" style="color: #9367EB;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#9367EB';"></i>
                                             </button>
+                                            <span class="tooltiptext">Crear Grupo trabajo</span>
+                                            </div>
                                             
                                             <!-- Modal -->
                                             <div class="modal fade" id="createGroupModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel-{{ $taskList->id }}" aria-hidden="true">
@@ -239,10 +257,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="tooltip-container">
                                             <button class="btn  btn-sm ml-0" data-toggle="modal" data-target="#assignGroupModal-{{ $taskList->id }}">
                                                 <i class="fas fa-plus-square fa-2x" style="color: #72F0B7;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#72F0B7';"></i>
                                             </button>
+                                            <span class="tooltiptext">Agregar lista a grupo</span>
+                                            </div>
 
                                             <!-- Modal para asignar lista de tareas a un grupo -->
                                             <div class="modal fade" id="assignGroupModal-{{ $taskList->id }}" tabindex="-1" role="dialog" aria-labelledby="assignGroupModalLabel-{{ $taskList->id }}" aria-hidden="true">
@@ -281,9 +301,12 @@
                                             </div>
 
                                             @if($taskList->group_id)
+                                            <div class="tooltip-container">
                                             <button data-toggle="modal" data-target="#inviteUserModal-{{ $taskList->id }}-{{ $taskList->group_id }}">
                                                 <i class=" fas fa-user-plus fa-lg" style="color: #343A40;" onmouseover="this.style.color='#FF5E00';" onmouseout="this.style.color='#343A40';"></i>
                                             </button>
+                                            <span class="tooltiptext">Invitar colaboradores</span>
+                                            </div>
                                             @endif
                                             @if($taskList->group_id)
                                             <!-- Modal para invitar usuarios al grupo -->
@@ -758,6 +781,16 @@
             }
         };
     </script>
+
+<script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip({
+        template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner" style="background-color: #ff6600; color: #fff;"></div></div>'
+    });
+});
+
+    </script>
+    
 
 @endsection
 
