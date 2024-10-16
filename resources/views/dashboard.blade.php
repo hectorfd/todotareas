@@ -7,7 +7,7 @@
         <div class="col-md-4">
             <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
-                    <h2 class="mb-0 font-bold text-green-400">Mis listas</h2>
+                    <h2 class="mb-0 font-bold text-green-400">soy Dany vamos</h2>
                     <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                 </div>
         
