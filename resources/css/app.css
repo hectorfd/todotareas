@@ -62,17 +62,92 @@ body{
 .bg-custom {
     background-color: #F4F8FB; 
 } */
+/* Modo claro (ya definido) */
 .bg-custom {
-    background-color: rgba(244, 248, 251, 0.9); 
-    /* background-image: url('../../public/images/fondo1.jpg'); */
+    background-color: rgba(244, 248, 251, 0.9);
 }
+
 .bg-custom2 {
-    background-color: #72F0B7; 
+    background-color: #72F0B7;
 }
 
 .bg-custom4 {
-    background-color: rgba(244, 248, 251, 0.9); 
+    background-color: rgba(244, 248, 251, 0.9);
 }
+
+/* Modo oscuro */
+body.dark-mode .bg-custom {
+    background-color: #1f1f1f; /* Fondo oscuro */
+}
+
+body.dark-mode .bg-custom2 {
+    background-color: #2c2c2c; /* Fondo oscuro alternativo */
+}
+
+body.dark-mode .bg-custom4 {
+    background-color: #1c1c1c; /* Fondo oscuro alternativo */
+}
+
+/* Ajustes de botones en modo oscuro */
+body.dark-mode .btn-primary {
+    background-color: #3c5a73; /* Color oscuro para botones */
+    border-color: #2b3d52;
+}
+
+body.dark-mode .btn-primary:hover {
+    background-color: #4d708c; /* Color oscuro al hacer hover */
+    border-color: #3c5a73;
+}
+
+/* Ajustes de listas en modo oscuro */
+body.dark-mode .list-group-item {
+    background-color: #2c2c2c; /* Fondo oscuro para items de lista */
+    border-color: #444444;
+    color: #ffffff;
+}
+
+body.dark-mode .list-group-item:hover {
+    background-color: #3a3a3a; /* Fondo oscuro más claro al hacer hover */
+    border-color: #555555;
+}
+
+/* Panel de listas en modo oscuro */
+body.dark-mode .panel-listas {
+    background-color: #1f1f1f;
+    color: #ffffff;
+}
+
+body.dark-mode .panel-listas .list-group-item {
+    background-color: #2c2c2c;
+}
+
+body.dark-mode .panel-listas .list-group-item:hover {
+    background-color: #3a3a3a;
+}
+
+/* Iconos en modo oscuro */
+body.dark-mode .icon-check {
+    color: #9acd32; /* Ajustar color de los íconos */
+}
+
+/* Elementos adicionales como los tooltips */
+body.dark-mode .tooltip-container .tooltiptext {
+    background-color: #333;
+    color: #fff;
+}
+
+.mochi-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain; /* Para asegurarte de que la imagen mantenga sus proporciones */
+    transition: transform 0.3s ease-in-out;
+}
+
+.mochi-logo:hover {
+    transform: scale(1.1); /* Aumentar ligeramente el tamaño cuando pases el cursor */
+}
+
+
 
 .task-vencida {
     color: red;
@@ -282,4 +357,41 @@ body{
     opacity: 1;
 }
 
+
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.navbar.dark-mode {
+    background-color: #1f1f1f;
+}
+
+.container.dark-mode {
+    background-color: #2c2c2c;
+    color: #ffffff;
+}
+
+
+
+body.dark-mode .list-group-item {
+    background-color: #2b2b2b; 
+    color: #ffffff; 
+    border-color: #444444; 
+}
+
+body.dark-mode .list-group-item:hover {
+    background-color: #3a3a3a; 
+    color: #ffffff;
+}
+
+
+body.dark-mode .icon-check {
+    color: #9acd32; 
+}
+
+
+body.dark-mode small {
+    color: #ffffff; 
+}
 
