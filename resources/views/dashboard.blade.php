@@ -7,7 +7,7 @@
         <div class="col-md-4">
             <div class="card panel-listas panel-listas-fixed">
                 <div class="card-header">
-                    <h2 class="mb-0 font-bold text-black">Mis listas</h2>
+                    <h2 class="mb-0 font-bold text-green-400">Mis listas</h2>
                     <a href="{{ route('task_lists.create') }}" class="btn btn-primary">Crear lista</a>
                 </div>
         
@@ -103,11 +103,6 @@
                             $iconColor = $hayNotificaciones ? '#F97E72' : '#28a745'; 
                         @endphp
                         
-                        {{-- <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}" data-toggle="tooltip" title="Ver Notificaciones">
-                            <i class="fas fa-bell fa-2x" style="color: {{ $iconColor }};" 
-                                onmouseover="this.style.color='#FF5E00';" 
-                                onmouseout="this.style.color='{{ $iconColor }}';"></i>
-                        </button> --}}
                         <div class="tooltip-container">
                             <button data-toggle="modal" data-target="#notificationsModal-{{ $taskList->id }}">
                                 <i class="fas fa-bell fa-2x" style="color: {{ $iconColor }};" 
