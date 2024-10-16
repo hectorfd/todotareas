@@ -2,10 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 
-
-
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -395,3 +391,116 @@ body.dark-mode small {
     color: #ffffff; 
 }
 
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+}
+
+.day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f0f8ff;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.day:hover {
+    background-color: #e6f2ff;
+}
+
+.empty-day {
+    visibility: hidden;
+}
+
+
+.custom-tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.custom-tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #6dff9b;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -70px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: bold;
+    font-size: 11px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%; 
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #6dff9b transparent transparent transparent;
+}
+
+.custom-tooltip-container:hover .custom-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Modo oscuro para la barra de navegación */
+.dark-mode #navbar {
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: white; /* Texto blanco */
+}
+
+.dark-mode #navbar a {
+    color: white;
+}
+
+.dark-mode .navbar-brand {
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-outline-primary {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.dark-mode .btn-outline-primary:hover {
+    background-color: #ffffff;
+    color: #6366F1;
+}
+
+.dark-mode .btn-outline-danger {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.dark-mode .btn-outline-danger:hover {
+    background-color: #ffffff;
+    color: #dc3545;
+}

@@ -108,6 +108,13 @@ class TaskController extends Controller
     return view('tasks.edit', compact('task'));
     }
 
+    public function calendar()
+    {
+        $user = auth()->user();
+        $taskLists = TaskList::where('user_id', $user->id)->get();
+        
+        return view('calendars.create', compact('taskLists'));
+    }
 
 
 
