@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\InvitationController;
-
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,3 +134,15 @@ Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('d
 
 Route::post('/groups/{group}/invite', [GroupController::class, 'inviteUser'])->name('groups.inviteUser');
 Route::put('/invitations/{invitation}/respond', [InvitationController::class, 'respond'])->name('invitations.respond');
+
+// Route::get('/calendars', [TaskListController::class, 'createForCalendar'])->name('calendars.create');
+// Route::get('/calendars', [TaskListController::class, 'createForCalendar'])->name('calendars.create');
+
+
+
+
+// Ruta para mostrar el calendario
+
+Route::get('/calendars', [CalendarController::class, 'showCalendar'])->name('calendars.show');
+
+Route::get('/calendar/{year?}/{month?}', [CalendarController::class, 'showCalendar'])->name('calendar.show');

@@ -30,6 +30,19 @@ class TaskListController extends Controller
         return view('task_lists.create');
     }
 
+    // TaskListController
+
+    public function createForCalendar()
+{
+    $user = auth()->user();
+    $taskLists = TaskList::where('user_id', $user->id)->get(); 
+    $taskList = $taskLists->first(); // Si quieres usar la primera lista o elegir una específica
+    return view('calendars.create', compact('taskLists', 'taskList'));
+}
+
+
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -115,5 +128,6 @@ class TaskListController extends Controller
     }
 
     
+
     
 }

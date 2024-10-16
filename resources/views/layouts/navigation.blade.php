@@ -6,6 +6,11 @@
         <a class="navbar-brand" href="{{ url('/dashboard') }}">
             <img src="{{ asset('images/mochi.gif') }}" alt="Logo Mochi" class="mochi-logo">
         </a>
+        <a class="navbar-brand" href="{{ url('/calendars') }}">
+            Calendario
+        </a>
+        
+        
         
         
         
