@@ -429,3 +429,44 @@ body.dark-mode small {
 }
 
 
+.custom-tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.custom-tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #6dff9b;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; 
+    left: 50%;
+    margin-left: -70px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: bold;
+    font-size: 11px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%; 
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #6dff9b transparent transparent transparent;
+}
+
+.custom-tooltip-container:hover .custom-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

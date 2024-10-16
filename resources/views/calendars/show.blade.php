@@ -20,30 +20,95 @@
         </div>
 
         <div class="calendar-grid grid grid-cols-7 gap-1">
-            <div class="text-center font-bold">Domingo</div>
+            <div class="text-center font-bold text-green-400">Domingo</div>
             <div class="text-center font-bold">Lunes</div>
             <div class="text-center font-bold">Martes</div>
             <div class="text-center font-bold">Miércoles</div>
             <div class="text-center font-bold">Jueves</div>
             <div class="text-center font-bold">Viernes</div>
-            <div class="text-center font-bold">Sábado</div>
+            <div class="text-center font-bold text-green-400">Sábado</div>
         </div>
-
-        <div class="grid grid-cols-7 gap-1">
-            {{-- Rellenar con días vacíos antes del primer día del mes --}}
+        {{-- Para depurar tengo errores conlas fechas --}}
+        {{-- <div class="grid grid-cols-7 gap-1">
+    
             @for ($i = 0; $i < $firstDayOfMonth; $i++)
                 <div class="empty-day"></div>
             @endfor
-
-            {{-- Mostrar los días del mes --}}
+        
             @for ($day = 1; $day <= $daysInMonth; $day++)
-                <div class="day border p-2 text-center cursor-pointer hover:bg-gray-100">
-                    {{ $day }}
-                </div>
+                
+                @php
+                    $currentDate = \Carbon\Carbon::create($year, $month, $day)->toDateString();
+                    $taskForDay = $tasks->first(function ($task) use ($currentDate) {
+                        return \Carbon\Carbon::parse($task->fecha_vencimiento)->toDateString() === $currentDate;
+                    });
+        
+                   
+                    dd("Fecha del día: $currentDate", $tasks->pluck('fecha_vencimiento')->toArray(), $taskForDay);
+                @endphp
+        
+                @if($taskForDay)
+                    <div class="day border p-2 text-center cursor-pointer bg-warning text-red-800">
+                        {{ $day }}
+                        <span class="d-block text-danger text-red-800">
+                            Tarea: {{ $taskForDay->titulo }}
+                        </span>
+                    </div>
+                @else
+                    <div class="day border p-2 text-center cursor-pointer hover:bg-gray-100 text-green-500">
+                        {{ $day }}
+                    </div>
+                @endif
+            @endfor
+        </div> --}}
+        <div class="grid grid-cols-7 gap-1">
+            @for ($i = 0; $i < $firstDayOfMonth; $i++)
+                <div class="empty-day"></div>
+            @endfor
+        
+            @for ($day = 1; $day <= $daysInMonth; $day++)
+                {{-- Verificar si el día tiene una o más tareas --}}
+                @php
+                    $tasksForDay = $tasks->filter(function ($task) use ($year, $month, $day) {
+                        return \Carbon\Carbon::parse($task->fecha_vencimiento)->format('Y-m-d') === \Carbon\Carbon::create($year, $month, $day)->format('Y-m-d');
+                    });
+                @endphp
+        
+                @if($tasksForDay->count() > 0)
+                    <div class="day border p-2 text-center cursor-pointer bg-warning relative">
+                        {{-- Mostrar todas las tareas del día --}}
+                        <ul class="list-disc text-left">
+                            @foreach($tasksForDay as $task)
+                                <li class="text-red-800">{{ $task->titulo }}</li>
+                            @endforeach
+                        </ul>
+                        <span class="absolute bottom-1 right-1 text-sm font-bold text-gray-900">{{ $day }}</span>
+                    </div>
+                @else
+                    <div class="day border p-2 text-center cursor-pointer hover:bg-gray-100 relative">
+                        <span class="absolute bottom-1 right-1 text-sm font-bold text-green-500">{{ $day }}</span>
+                    </div>
+                @endif
             @endfor
         </div>
+        
+        
+        
+        
+        
+        
+    </div>
+
+    <div class="mt-5">
+        <h2 class="text-xl font-bold">Lista de Tareas</h2>
+        <ul class="list-group">
+            
+            @foreach($tasks as $task)
+                <li class="list-group-item">
+                    <strong>{{ $task->titulo }}</strong> - Vence: {{ \Carbon\Carbon::parse($task->fecha_vencimiento)->format('d-m-Y H:i') }}
+                </li>
+            @endforeach
+        </ul>
     </div>
 </div>
 @endsection
-
-
