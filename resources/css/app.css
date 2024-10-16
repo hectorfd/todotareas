@@ -470,3 +470,37 @@ body.dark-mode small {
     visibility: visible;
     opacity: 1;
 }
+
+/* Modo oscuro para la barra de navegación */
+.dark-mode #navbar {
+    background-color: #1a1a1a; /* Fondo oscuro */
+    color: white; /* Texto blanco */
+}
+
+.dark-mode #navbar a {
+    color: white;
+}
+
+.dark-mode .navbar-brand {
+    color: #ffffff !important;
+}
+
+.dark-mode .btn-outline-primary {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.dark-mode .btn-outline-primary:hover {
+    background-color: #ffffff;
+    color: #6366F1;
+}
+
+.dark-mode .btn-outline-danger {
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+.dark-mode .btn-outline-danger:hover {
+    background-color: #ffffff;
+    color: #dc3545;
+}

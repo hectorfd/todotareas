@@ -33,35 +33,36 @@ class CalendarController extends Controller
     // }
 
     public function showCalendar($year = null, $month = null)
-{
-    $currentDate = Carbon::now();
-
-    if (!$year || !$month) {
-        $year = $currentDate->year;
-        $month = $currentDate->month;
+    {
+        $currentDate = Carbon::now();
+    
+        if (!$year || !$month) {
+            $year = $currentDate->year;
+            $month = $currentDate->month;
+        }
+    
+        // Obtener el número de días del mes
+        $daysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
+    
+        // Obtener el primer día del mes
+        $firstDayOfMonth = Carbon::createFromDate($year, $month, 1)->dayOfWeek;
+    
+        // Obtener las tareas de todas las listas del usuario autenticado que vencen este mes
+        $tasks = Task::where('user_id', auth()->id()) // Tareas de todas las listas del usuario
+                     ->whereYear('fecha_vencimiento', $year)
+                     ->whereMonth('fecha_vencimiento', $month)
+                     ->get();
+    
+        // Obtener los días del mes que tienen tareas
+        $daysWithTasks = $tasks->map(function ($task) {
+            return Carbon::parse($task->fecha_vencimiento)->day;
+        })->toArray();
+    
+        // Calcular el mes anterior y el siguiente
+        $prevMonth = Carbon::createFromDate($year, $month)->subMonth();
+        $nextMonth = Carbon::createFromDate($year, $month)->addMonth();
+    
+        return view('calendars.show', compact('year', 'month', 'daysInMonth', 'firstDayOfMonth', 'tasks', 'daysWithTasks', 'prevMonth', 'nextMonth'));
     }
-
-    // Obtener el número de días del mes
-    $daysInMonth = Carbon::createFromDate($year, $month, 1)->daysInMonth;
-
-    // Obtener el primer día del mes
-    $firstDayOfMonth = Carbon::createFromDate($year, $month, 1)->dayOfWeek;
-
-    // Obtener las tareas del usuario actual que vencen este mes
-    $tasks = Task::where('user_id', auth()->id())
-                 ->whereYear('fecha_vencimiento', $year)
-                 ->whereMonth('fecha_vencimiento', $month)
-                 ->get();
-
-    // Obtener los días del mes que tienen tareas
-    $daysWithTasks = $tasks->map(function ($task) {
-        return Carbon::parse($task->fecha_vencimiento)->day;
-    })->toArray();
-
-    // Calcular el mes anterior y el siguiente
-    $prevMonth = Carbon::createFromDate($year, $month)->subMonth();
-    $nextMonth = Carbon::createFromDate($year, $month)->addMonth();
-
-    return view('calendars.show', compact('year', 'month', 'daysInMonth', 'firstDayOfMonth', 'tasks', 'daysWithTasks', 'prevMonth', 'nextMonth'));
-}
+    
 }

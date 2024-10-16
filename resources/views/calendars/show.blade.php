@@ -67,30 +67,37 @@
             @endfor
         
             @for ($day = 1; $day <= $daysInMonth; $day++)
-                {{-- Verificar si el día tiene una o más tareas --}}
                 @php
+                    $currentDate = \Carbon\Carbon::now();  // Obtener la fecha actual
+                    $currentDayDate = \Carbon\Carbon::create($year, $month, $day);  // Fecha que estamos iterando
                     $tasksForDay = $tasks->filter(function ($task) use ($year, $month, $day) {
                         return \Carbon\Carbon::parse($task->fecha_vencimiento)->format('Y-m-d') === \Carbon\Carbon::create($year, $month, $day)->format('Y-m-d');
                     });
                 @endphp
         
+                {{-- Verificar si hay tareas para ese día --}}
                 @if($tasksForDay->count() > 0)
-                    <div class="day border p-2 text-center cursor-pointer bg-warning relative">
-                        {{-- Mostrar todas las tareas del día --}}
+                    {{-- Aplicar color rojo si la fecha es anterior a la fecha actual --}}
+                    <div class="day border p-3 text-center cursor-pointer relative h-24 w-35 overflow-y-auto 
+                        {{ $currentDayDate->lessThan($currentDate) ? ' bg-danger' : 'bg-info' }}">
                         <ul class="list-disc text-left">
                             @foreach($tasksForDay as $task)
-                                <li class="text-red-800">{{ $task->titulo }}</li>
+                                <li class="text-white text-xs p-0">{{ $task->titulo }}</li> 
                             @endforeach
                         </ul>
-                        <span class="absolute bottom-1 right-1 text-sm font-bold text-gray-900">{{ $day }}</span>
+                        <span class="absolute bottom-1 right-1 text-xs font-bold text-white">{{ $day }}</span>
                     </div>
                 @else
-                    <div class="day border p-2 text-center cursor-pointer hover:bg-gray-100 relative">
+                    <div class="day border p-2 text-center cursor-pointer bg-custom hover:bg-gray-100 relative h-24 w-35">
                         <span class="absolute bottom-1 right-1 text-sm font-bold text-green-500">{{ $day }}</span>
                     </div>
                 @endif
             @endfor
         </div>
+        
+        
+        
+        
         
         
         
